@@ -4,7 +4,6 @@ module Templates.Partials.Containers where
 import Classh
 import Classh.Reflex 
 import Templates.Partials.Image
-import Common.Constants
 
 import Data.Text (Text)
 import Data.Bool
@@ -99,7 +98,7 @@ toggleButton' imgSrc label = do
   rec
     (labelEl, _) <- elClass' "div" "grid grid-cols-12 p-4" $ do
       elClass "div" $(classh' [colSpan .~~ 2]) $ imgClass imgSrc ""
-      elClass "div" $(classh' [colSpan .~~ 9]) $ textS $(classh' [text_size .~ normalTextSize]) label
+      elClass "div" $(classh' [colSpan .~~ 9]) $ textS $(classh' [text_size .|~ [Base,LG,XL,XL2, XL3]]) label
       elDynClass' "span" (classes <$> toggled) $ 
         dynText "expand_less"
 
