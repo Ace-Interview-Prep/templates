@@ -15,7 +15,10 @@ import Control.Monad.Fix (MonadFix)
 import Reflex.Dom.Core
 import Templates.Types 
 import Templates.Partials.Buttons
-import Common.Utils
+--import Common.Utils
+
+emailParse :: Either T.Text Bool
+emailParse _ = Right True
 
 -- | Builds an input bar for emails, it returns both the input and
 -- the button that sends it.
