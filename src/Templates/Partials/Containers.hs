@@ -2,8 +2,7 @@
 module Templates.Partials.Containers where
 
 import Classh
-import Classh.Reflex
-import Classh.Upstream (col)
+import Classh.Reflex 
 import Templates.Partials.Image
 import Common.Constants
 

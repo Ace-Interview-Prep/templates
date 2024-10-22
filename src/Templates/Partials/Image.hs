@@ -1,6 +1,5 @@
 module Templates.Partials.Image where
 
-
 import Templates.Types
 import Reflex.Dom.Core
 import qualified Data.Map as Map

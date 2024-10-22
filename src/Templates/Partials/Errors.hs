@@ -4,7 +4,6 @@ module Templates.Partials.Errors where
 
 import Classh
 import Classh.Reflex (textS)
-import Classh.Upstream (twSize')
 
 import Templates.Types
 import Reflex.Dom.Core
