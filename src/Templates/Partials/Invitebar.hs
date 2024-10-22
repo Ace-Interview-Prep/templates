@@ -17,7 +17,7 @@ import Templates.Types
 import Templates.Partials.Buttons
 --import Common.Utils
 
-emailParse :: Either T.Text Bool
+emailParse :: a -> Either T.Text Bool
 emailParse _ = Right True
 
 -- | Builds an input bar for emails, it returns both the input and
