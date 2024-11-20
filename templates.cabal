@@ -31,54 +31,9 @@ library
     TemplateHaskell
 
   build-depends: base
-               , aeson
-               , beam-core
-               , bimap
-               , bytestring
-               , bytestring-aeson-orphans
                , ClasshSS
-               -- , common
-               , containers
-               , cookie
-               , data-default
-               , email-validate
-               , ghcjs-dom
---               , ghcjs-dom-ffi
-               , jsaddle
-               --
--- NEVER USE: jsaddle-dom, use ghcjs-dom instead
---  jsaddle-dom Couldn't match type ‘JSDOM.Types.Document’ with ‘GHCJS.Document
-               , lens
-               , lucid
-               -- TODO
-               --, mmark
-               , obelisk-executable-config-lookup
-               , obelisk-frontend
-               , obelisk-generated-static
-               , obelisk-oauth-common
-               , obelisk-route           
-               , parsec
-               , random
-               , reflex
+               , reflex-classhss
                , reflex-dom
-               , reflex-dom-echarts
-               , reflex-classhss              
-               , rhyolite-account-types
-               , rhyolite-common
-               , rhyolite-frontend
-               , signed-data
-               , scrappy-core
-               , template-haskell
-               , text
-               , these
-               , time
-               , transformers
-               , uuid-types
-               , case-insensitive
-               , vessel
-               , ref-tf                                               
-               , reflex-dom-core
-               , witherable               
+               , containers
                , data-default
-
-
+               , text
