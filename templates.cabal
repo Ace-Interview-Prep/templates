@@ -32,8 +32,9 @@ library
 
   build-depends: base
                , ClasshSS
-               , reflex-classhss
-               , reflex-dom
                , containers
                , data-default
+               , filepath
+               , reflex-classhss
+               , reflex-dom
                , text
