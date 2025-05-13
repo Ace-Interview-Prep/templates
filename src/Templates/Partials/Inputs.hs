@@ -37,10 +37,10 @@ messageInput newAttributes clearEvent = textAreaElement $ def
 
 messageInputAttrs ::  Map.Map AttributeName T.Text
 messageInputAttrs =
-  "class" =: $(classh' [w .~~ TWSize_Full, py .~~ TWSize 4, custom .~ "text-2xl"] )
+  "class" =: $(classh' [w .~~ TWSize_Full, p .~~ TWSize 4, custom .~ "text-2xl"] )
   <> "placeholder" =: "Type your message"
   <> "type" =: "text"
-  <> "rows" =: "1"
+  <> "rows" =: "2"
 
 attachmentInput
   :: Template t m
