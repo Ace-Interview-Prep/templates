@@ -9,6 +9,16 @@ import Templates.Types
 import Reflex.Dom.Core
 import Data.Text (Text)
 
+eitherDisplay
+  :: Template t m
+  => Dynamic t (Either e a) -- ^ What to watch for
+  -> (a -> m ()) -- ^ How to render contents
+  -> (e -> m ())
+  -> m ()
+eitherDisplay dynEith template failtemplate = dyn_ $ ffor dynEith $ \case
+  Left e -> failtemplate e
+  Right x_ -> template x_
+
 -- | Render the given template only when the 'Dynamic' is 'Just'.
 maybeDisplay
   :: Template t m
