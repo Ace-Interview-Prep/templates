@@ -2,10 +2,12 @@
 module Templates.Partials.Containers where
 
 import Classh
-import Classh.Reflex 
+import Classh.Reflex
 import Templates.Partials.Image
+import Templates.Partials.Buttons
+import Templates.Types
 
-import Data.Text (Text)
+import Data.Text as T (Text)
 import Data.Bool
 import Control.Monad.Fix
 import Control.Monad
@@ -33,7 +35,7 @@ toggleButton label = do
                                              , custom .~ "cursor-pointer  flex flex-row justify-between"
                                              ]) $ do
       textS $(classh' [ text_color .~~ White ]) label
-      elDynClass' "span" (classes <$> toggled) $ text "expand_less" 
+      elDynClass' "span" (classes <$> toggled) $ text "expand_less"
     let toggleEv = domEvent Click labelEl
     toggled <- holdUniqDyn =<< toggle True toggleEv
 
@@ -99,7 +101,7 @@ toggleButton' imgSrc label = do
     (labelEl, _) <- elClass' "div" "grid grid-cols-12 p-4" $ do
       elClass "div" $(classh' [colSpan .~~ 2]) $ imgClass imgSrc ""
       elClass "div" $(classh' [colSpan .~~ 9]) $ textS $(classh' [text_size .|~ [Base,LG,XL,XL2, XL3]]) label
-      elDynClass' "span" (classes <$> toggled) $ 
+      elDynClass' "span" (classes <$> toggled) $
         dynText "expand_less"
 
     let toggleEv = domEvent Click labelEl
@@ -108,4 +110,16 @@ toggleButton' imgSrc label = do
   pure toggled
 
 
-  
+
+openCloseButton :: Template t m => ImgSrc -> Color -> T.Text -> m (Event t ())
+openCloseButton imgSrc tColor name = do
+  buttonToggleBody (constDyn "pl-10") True $ \case
+    True -> do
+      --gridCol Col12 $ do
+        col [6] $ imgClass imgSrc $(classh' [custom .~ "rotate-180 inline-block", position .~~ centered ])
+        divClass $(classh' [colSpan .|~ [6], position .~~ centered, custom .~ "inline-block"]) $ do
+          textS (classhUnsafe [text_color .~~ tColor]) $ "close" <&> name
+    False -> do
+      col [6] $ imgClass imgSrc $(classh' [custom .~ "rotate-180 inline-block", position .~~ centered ])
+      divClass $(classh' [colSpan .|~ [6], position .~~ centered, custom .~ "inline-block"]) $ do
+        textS (classhUnsafe [text_color .~~ tColor]) $ "open" <&> name
