@@ -2,11 +2,13 @@
 
 module Templates.Partials.Buttons where
 
-import Templates.Types 
+import Templates.Types
 import Classh as C
 import Classh.Reflex as C
-import Data.Text as T 
+import Data.Text as T
 import Reflex.Dom.Core
+import Control.Lens ((%~))
+import Data.Proxy
 import Data.Char (isAlphaNum, isSpace)
 
 iconButton :: DomBuilder t m => Text -> m (Event t ())
@@ -15,7 +17,7 @@ iconButton icon = do
   pure $ domEvent Click e
   where
     classes = "focus:outline-none bg-primary rounded p-2.5 w-[50%] font-icon text-icon text-white leading-none shadow-button h-[95%]"
-  
+
 iconButton' :: (DomBuilder t m, PostBuild t m) => Dynamic t Bool -> Text -> m (Event t ())
 iconButton' enabled icon = do
   let attrs = ffor enabled $ \b -> if b then "class" =: classes else "class" =: classes <> "disabled" =: "1"
@@ -70,14 +72,15 @@ navyBlueButton buttonText = do
   (e, _) <- elClass' "button" other $ C.textS textCfg' buttonText
   pure $ domEvent Click e
   where
-    textCfg' = $(C.classh' [ C.text_color C..~~ C.White, C.text_font C..~~ C.Font_Custom "Sarabun"
+    textCfg' = $(C.classh' [ C.text_color C..~~ C.White
+                           , C.text_font C..~~ C.Font_Custom "Sarabun"
                            , C.text_weight C..~~ C.Bold
                            ])
     other =
       "focus:outline-none w-full p-4 shadow-button bg-[#2E3A59] \
       \ rounded-3xl hover:bg-primary-rich active:bg-primary-desaturated \
       \ focus:ring-4 ring-primary ring-opacity-50 \
-      \ transition-all duration-300 ease-in-out \ 
+      \ transition-all duration-300 ease-in-out \
       \ transform hover:scale-105 active:scale-95 \
       \ hover:shadow-md active:shadow-lg"
 
@@ -100,7 +103,7 @@ primaryButtonImageDyn dynImageHref height width = do
   pure $ domEvent Click e
   where
     otherImgAttrs = "height" =: height <> "width" =: width <> "class" =: "block mx-auto"
-    imgAttrs = (\src -> otherImgAttrs <> "src" =: src) <$> dynImageHref 
+    imgAttrs = (\src -> otherImgAttrs <> "src" =: src) <$> dynImageHref
     classes =
       "focus:outline-none w-full p-4 mt-16 shadow-button bg-[#00B9DA] \
       \ font-[Sarabun] font-bold text-white text-body text-center rounded-xl \
@@ -163,7 +166,7 @@ primaryButton buttonText = do
   where
     -- for testing / selenium mainly
     name = T.filter (\c -> isAlphaNum c || isSpace c ) buttonText
- 
+
 primaryClass =
   "focus:outline-none shadow-button bg-[#00B9DA] \
   \ font-[Sarabun] font-bold text-white text-body text-center rounded-xl \
@@ -179,7 +182,7 @@ example = buttonToggleBody "" True $ \case
   True -> text "hey"
   False -> text "Hello"
 
--- | Toggles between 2 inner bodies based on its clicks 
+-- | Toggles between 2 inner bodies based on its clicks
 buttonToggleBody :: Template t m => Dynamic t T.Text -> Bool -> (Bool -> m a) -> m (Event t ())
 buttonToggleBody buttonClasses start dynDom = mdo
   (e, _) <- elDynClass' "button" buttonClasses $ dyn $ ffor booly $ dynDom
@@ -187,3 +190,14 @@ buttonToggleBody buttonClasses start dynDom = mdo
   booly <- toggle start clk
   pure clk
 
+
+-- | Stop event propogation on click
+greedyButton :: forall t m a. DomBuilder t m => m a -> m (Event t (), a)
+greedyButton c = do
+  let cfg = (def :: ElementConfig EventResult t (DomBuilderSpace m))
+            & elementConfig_eventSpec %~ addEventSpecFlags (Proxy :: Proxy (DomBuilderSpace m)) Click (const stopPropagation)
+  (e, a) <- element "button" cfg c
+  return (domEvent Click e, a)
+
+greedyButton_ :: forall t m a. DomBuilder t m => m a -> m (Event t ())
+greedyButton_ c = fmap fst $ greedyButton c
