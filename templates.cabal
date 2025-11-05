@@ -7,15 +7,20 @@ build-type: Simple
 library
     hs-source-dirs:   src
     exposed-modules: Templates.Partials.Buttons
+                     Templates.Partials.Checkbox
                      Templates.Partials.Image
                      Templates.Partials.Containers
+                     Templates.Partials.Containers.Dropdown
                      Templates.Partials.Inputs
                      Templates.Partials.Lists
+                     Templates.Partials.Modal
                      Templates.Partials.Searchbar
                      Templates.Partials.Errors
                      Templates.Partials.Invitebar
                      Templates.Types
-    
+                     Templates.DomExtras
+
+
   default-extensions:
     ConstraintKinds
     FlexibleContexts
@@ -35,6 +40,7 @@ library
                , containers
                , data-default
                , filepath
+               , lens
                , reflex-classhss
                , reflex-dom
                , text
