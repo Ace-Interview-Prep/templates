@@ -19,17 +19,32 @@ data ListItemConfig t = ListItemConfig
   , _listItemConfig_icon :: Dynamic t (Maybe Text)
   , _listItemConfig_highlight :: Dynamic t (Maybe Text)
   , _listItemConfig_unread :: Dynamic t (Maybe Int)
+  , _listItemConfig_hoverColor :: Color
+  , _listItemConfig_unreadColor :: Color
+  , _listItemConfig_borderColor :: Color
+  , _listItemConfig_textColor :: Color
+  , _listItemConfig_subtextColor :: Color
   }
 
 -- | The default configuration for list items is to have no subtext, no
 -- icon, no highlighting information, and to not be clickable.
+-- Uses default dark theme colors.
 defListItemConfig :: Applicative (Dynamic t) => ListItemConfig t
-defListItemConfig = ListItemConfig
+defListItemConfig = defListItemConfig' (hex "2E3A59") (hex "FF6D31") (hex "E5E7EB") White (hex "D1D5DB")
+
+-- | Configurable version with custom colors
+defListItemConfig' :: Applicative (Dynamic t) => Color -> Color -> Color -> Color -> Color -> ListItemConfig t
+defListItemConfig' hoverCol unreadCol borderCol textCol subtextCol = ListItemConfig
   { _listItemConfig_clickable = pure False
   , _listItemConfig_subtext = pure Nothing
   , _listItemConfig_icon = pure Nothing
   , _listItemConfig_highlight = pure Nothing
-  , _listItemConfig_unread = pure Nothing 
+  , _listItemConfig_unread = pure Nothing
+  , _listItemConfig_hoverColor = hoverCol
+  , _listItemConfig_unreadColor = unreadCol
+  , _listItemConfig_borderColor = borderCol
+  , _listItemConfig_textColor = textCol
+  , _listItemConfig_subtextColor = subtextCol
   }
 
 instance Reflex t => Default (ListItemConfig t) where
@@ -53,27 +68,37 @@ listItem
      )
   => ListItemConfig t -- ^ Visual configuration for the list item
   -> Dynamic t Text -- ^ The label
-  -> m (Event t ()) 
+  -> m (Event t ())
   -- ^ If the configuration has '_listItemConfig_clickable' set, then
   -- this is the 'Click' event for the list item. Otherwise, it's
   -- 'never'.
 listItem cfg label = do
-  let 
+  let
     topClass :: (Bool, Maybe Int) -> Text
-    topClass (click, unread) = T.intercalate " " $
-      [ "flex flex-col py-2 border-b border-metaline" ]
+    topClass (click, unread) = classhUnsafe $
+      [ py .~~ TWSize 2
+      , border . bStyle . b .~~ BSolid
+      , border . bw_b .~~ B1
+      , border . bc_b .~~ _listItemConfig_borderColor cfg
+      ]
       <> case click of
-          True -> ["cursor-pointer hover:bg-[#2E3A59]"]
+          True -> [ cursor .~~ CursorPointer
+                  , bgColor .~^ [("def", noTransition Transparent)
+                               , ("hover", noTransition $ _listItemConfig_hoverColor cfg)]
+                  ]
           False -> []
       <> case unread of
-           Just _ -> [ "bg-[#FF6D31]" ]
+           Just _ -> [ bgColor .~~ _listItemConfig_unreadColor cfg ]
            Nothing -> []
   let topClassDyn = topClass <$> ((,) <$> _listItemConfig_clickable cfg <*> _listItemConfig_unread cfg)
 
-  
+
   (e, _) <- elDynClass' "div" topClassDyn $ do
 
-    elClass "div" "leading-none font-facit text-body text-xl text-white flex flex-row items-center gap-2 overflow-hidden" $ do
+    let labelClass = classhUnsafe [ custom .~ "leading-none font-facit text-body text-xl flex flex-row items-center gap-2 overflow-hidden"
+                                  , text_color .~~ _listItemConfig_textColor cfg
+                                  ]
+    elClass "div" labelClass $ do
       dyn_ $ ffor (_listItemConfig_icon cfg) $ \case
         Nothing -> blank
         Just icon -> elClass "span" "font-icon text-icon select-none" $ text icon
@@ -81,10 +106,12 @@ listItem cfg label = do
       el "span" $ dyn_ $ renderHighlight cfg <$> label
 
     dyn_ $ ffor (_listItemConfig_subtext cfg) $ \case
-      Just subtext -> elClass "div" "mt-1 leading-none font-facit text-label text-light" $ text subtext
+      Just subtext -> textS (classhUnsafe [ custom .~ "mt-1 leading-none font-facit text-label"
+                                          , text_color .~~ _listItemConfig_subtextColor cfg
+                                          ]) subtext
       Nothing -> blank
 
-  
+
   pure $ domEvent Click e  
 
 

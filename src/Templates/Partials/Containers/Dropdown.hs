@@ -20,8 +20,31 @@ dropdown'
   => Map.Map a T.Text
   -> SelectElementConfig er t (DomBuilderSpace m)
   -> m (Dynamic t a)
-dropdown' options cfg' = mdo
-  let class' = "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#00B9DA] font-[Sarabun] text-lg mb-5 bg-white"
+dropdown' = dropdown'' (hex "00B9DA") White (Gray C300)
+
+-- | Parameterized version with custom colors
+dropdown''
+  :: ( MonadFix m
+     , DomBuilder t m
+     )
+  => Color -- ^ Focus border color
+  -> Color -- ^ Background color
+  -> Color -- ^ Default border color
+  -> Map.Map a T.Text
+  -> SelectElementConfig er t (DomBuilderSpace m)
+  -> m (Dynamic t a)
+dropdown'' focusCol bgCol borderCol options cfg' = mdo
+  let class' = classhUnsafe [ w .~~ TWSize_Full
+                            , px .~~ TWSize 4
+                            , py .~~ TWSize 3
+                            , bw .~~ B1
+                            , bc .~^ [("def", noTransition borderCol), ("focus", noTransition focusCol)]
+                            , br .~~ R_Lg
+                            , border . outline .~ [("focus", Outline_None)]
+                            , mb .~~ TWSize 5
+                            , bgColor .~~ bgCol
+                            , custom .~ "font-[Sarabun] text-lg"
+                            ]
   let safeInitial = (snd . head $ Map.toList options)
   let cfg = cfg'
             & selectElementConfig_initialValue .~ safeInitial
@@ -46,16 +69,31 @@ dropdownWithDefault
   -> T.Text
   -> SelectElementConfig er t (DomBuilderSpace m)
   -> m (Dynamic t a)
-dropdownWithDefault options start cfg' = mdo
-  let class' = $(classh' [ w .~~ TWSize_Full, px .~~ TWSize 4, py .~~ TWSize 3
-                         , bw .~~ B1
-                         , bc .~^ [("def", noTransition (Gray C300)), ("focus", noTransition (hex "00B9DA"))]
-                         , br .~~ R_Lg
-                         , border . bStyle .~ [("focus",BNone)]
-                         , custom .~ "focus:outline-none focus:border-"
-                         , mb .~~ TWSize 5
-                         , bgColor .~~ White
-                         ])
+dropdownWithDefault = dropdownWithDefault' (hex "00B9DA") White (Gray C300)
+
+-- | Parameterized version with custom colors
+dropdownWithDefault'
+  :: ( MonadFix m
+     , DomBuilder t m
+     )
+  => Color -- ^ Focus border color
+  -> Color -- ^ Background color
+  -> Color -- ^ Default border color
+  -> Map.Map a T.Text
+  -> T.Text
+  -> SelectElementConfig er t (DomBuilderSpace m)
+  -> m (Dynamic t a)
+dropdownWithDefault' focusCol bgCol borderCol options start cfg' = mdo
+  let class' = classhUnsafe [ w .~~ TWSize_Full
+                            , px .~~ TWSize 4
+                            , py .~~ TWSize 3
+                            , bw .~~ B1
+                            , bc .~^ [("def", noTransition borderCol), ("focus", noTransition focusCol)]
+                            , br .~~ R_Lg
+                            , border . outline .~ [("focus", Outline_None)]
+                            , mb .~~ TWSize 5
+                            , bgColor .~~ bgCol
+                            ]
   let safeInitial = start
   let cfg = cfg'
             & selectElementConfig_initialValue .~ safeInitial
@@ -69,5 +107,5 @@ dropdownWithDefault options start cfg' = mdo
   where
     flipTup (a_,b_) = (b_,a_)
     makeOpt optText = do
-      (e, _) <- elAttr' "option" ("value" =: optText) $ textS $(classh' [text_font .~~ Font_Custom "Sarabun", text_size .~~ LG]) optText
+      (e, _) <- elAttr' "option" ("value" =: optText) $ textS (classhUnsafe [text_font .~~ Font_Custom "Sarabun", text_size .~~ LG]) optText
       pure $ optText <$ domEvent Click e

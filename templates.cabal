@@ -1,6 +1,6 @@
 name: templates
 version: 0.1.0.0
-cabal-version: >= 1.8
+cabal-version: >= 1.10
 build-type: Simple
 
 
@@ -21,27 +21,25 @@ library
                      Templates.Types
                      Templates.DomExtras
 
+    default-extensions:
+        ConstraintKinds
+        FlexibleContexts
+        FlexibleInstances
+        FunctionalDependencies
+        GADTs
+        LambdaCase
+        MultiParamTypeClasses
+        RankNTypes
+        RecursiveDo
+        ScopedTypeVariables
+        TemplateHaskell
 
-  default-extensions:
-    ConstraintKinds
-    FlexibleContexts
-    FlexibleInstances
-    FunctionalDependencies
-    GADTs
-    LambdaCase
-    MultiParamTypeClasses
-    -- OverloadedStrings
-    RankNTypes
-    RecursiveDo
-    ScopedTypeVariables
-    TemplateHaskell
-
-  build-depends: base
+    build-depends: base
                , ClasshSS
                , containers
                , data-default
                , filepath
                , lens
                , reflex-classhss
-               , reflex-dom
+               , reflex-dom-core
                , text

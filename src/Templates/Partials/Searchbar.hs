@@ -16,30 +16,41 @@ searchbar
   => Text
   -> Event t a
   -> m (InputEl t m)
-searchbar placeholder clearEvent = do
-  elClass "div" $(classh' [mt .~~ TWSize 0, w .~~ TWSize_Full, bgColor .~~ White, br .~~ R_Normal, custom .~ "flex flex-row"]) $ do
-    elClass "button" $(classh' [ px .~~ TWSize 3
-                               , br .~~ R_Normal
-                               , custom .~ "leading-none shadow-button focus:outline-none font-icon"]) $ text "search"
+searchbar = searchbar' White Black
+
+-- | Parameterized version with custom colors
+searchbar'
+  :: DomBuilder t m
+  => Color -- ^ Background color
+  -> Color -- ^ Text color
+  -> Text
+  -> Event t a
+  -> m (InputEl t m)
+searchbar' bgCol txtCol placeholder clearEvent = do
+  elClass "div" (classhUnsafe [mt .~~ TWSize 0, w .~~ TWSize_Full, bgColor .~~ bgCol, br .~~ R_Normal, custom .~ "flex flex-row"]) $ do
+    elClass "button" (classhUnsafe [ px .~~ TWSize 3
+                                   , br .~~ R_Normal
+                                   , shadow .~~ Shadow_Md
+                                   , border . outline .~ [("focus", Outline_None)]
+                                   , custom .~ "leading-none font-icon"
+                                   ]) $ text "search"
+    let inputClass = classhUnsafe [ w .~~ (pix 96)
+                                  , h .~~ TWSize_Full
+                                  , bgColor .~~ Transparent
+                                  , pl .~~ TWSize 2
+                                  , py .~~ TWSize 1
+                                  , pr .~~ TWSize 3
+                                  , border . outline .~ [("focus", Outline_None)]
+                                  , custom .~ "flex-grow placeholder-light"
+                                  ]
+                     <> classhUnsafe [ text_color .~~ txtCol
+                                     , text_weight .~~ Light
+                                     , text_size .~~ XL
+                                     , custom .~ "text-icon"
+                                     ]
     inputElement $ def
-      & initialAttributes .~
-        ("class" =: ($(classh' [ w .~~ (pix 96) 
-                              , h .~~ TWSize_Full
-                              , bgColor .~~ Transparent
-                              , pl .~~ TWSize 2
-                              , py .~~ TWSize 1
-                              , pr .~~ TWSize 3
-                              , custom .~ "focus:outline-none flex-grow placeholder-light"
-                              ]
-                      ) <> $(classh' [ text_color .~~ Black 
-                                    , text_weight .~~ Light
-                                    , text_size .~~ XL
-                                    , custom .~ "text-icon"
-                                    ]
-                           )
-                    )
-         <> "placeholder" =: placeholder
-         <> "type" =: "text"
-        )
+      & initialAttributes .~ ("class" =: inputClass
+                              <> "placeholder" =: placeholder
+                              <> "type" =: "text")
       & inputElementConfig_setValue .~ (mempty <$ clearEvent)
   

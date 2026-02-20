@@ -6,44 +6,28 @@ import Classh
 import Classh.Reflex
 import Templates.Types
 import Reflex.Dom.Core
-import qualified Data.Text as T
 
--- | Simple circle with specified radius and color
-circle :: DomBuilder t m => T.Text -> Color -> m ()
-circle rad c = circle' (parseRadius rad) c
-  where
-    -- Parse "10px" to 5.0 (radius is half diameter)
-    parseRadius r = case T.stripSuffix "px" r of
-      Just numStr -> case reads (T.unpack numStr) :: [(Float, String)] of
-        [(n, "")] -> n / 2
-        _ -> 5.0 -- default
-      Nothing -> 5.0
+type Radius = Float
 
--- | Circle with specified radius and color using ClasshSS
+-- | Circle with specified diameter and color
+-- Example: circle (twSize' 10) aceAccent creates a 10-unit diameter circle
+circle :: DomBuilder t m => TWSizeOrFraction -> Color -> m ()
+circle diameter c =
+  elClass "div" (classhUnsafe [w .~~ diameter, h .~~ diameter, bgColor .~~ c, br .~~ R_Full]) $ do
+    textS (classhUnsafe [text_color .~~ c]) "."
+
+-- | Circle with specified radius and color (for backwards compatibility)
 circle' :: DomBuilder t m => Radius -> Color -> m ()
-circle' rad c = elClass "div" (classhUnsafe [w .~~ twSize' (rad * 2), h .~~ twSize' (rad * 2), bgColor .~~ c, br .~~ R_Full]) $ do
-  textS (classhUnsafe [text_color .~~ c]) "."
+circle' rad c = circle (twSize' (rad * 2)) c
 
 -- | Circle with dynamic color
-circleDynColor' :: Template t m => Radius -> Dynamic t Color -> m ()
-circleDynColor' rad dynC = elDynClass "div" (mkBoxStyle <$> dynC) $ do
+circleDynColor :: Template t m => TWSizeOrFraction -> Dynamic t Color -> m ()
+circleDynColor diameter dynC = elDynClass "div" (mkBoxStyle <$> dynC) $ do
   textDynS (mkTextStyle <$> dynC) "."
   where
     mkTextStyle c' = (classhUnsafe [text_color .~~ c'])
-    mkBoxStyle c' = classhUnsafe [ w .~~ twSize' (rad * 2)
-                                 , h .~~ twSize' (rad * 2)
+    mkBoxStyle c' = classhUnsafe [ w .~~ diameter
+                                 , h .~~ diameter
                                  , bgColor .~~ c'
                                  , br .~~ R_Full
                                  ]
-
--- | Legacy dynamic color circle (uses raw HTML)
-circleDynColor ::  (PostBuild t m, DomBuilder t m) => T.Text -> Dynamic t T.Text -> m ()
-circleDynColor rad dynColor =
-  elDynAttr "span" attrs blank
-  where
-    attrs = ffor dynColor $ \color ->
-      ( "style" =: ("border-radius:50%; width: " <> rad <> "; height: " <> rad <> "; display: inline-block;")
-        <> "class" =: color
-      )
-
-type Radius = Float
