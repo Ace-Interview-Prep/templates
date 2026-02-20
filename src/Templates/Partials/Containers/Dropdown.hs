@@ -8,6 +8,7 @@ import Reflex.Dom.Core
 import Control.Monad.Fix
 import Data.Maybe
 import qualified Data.Map as Map
+import Data.Map ((!))
 import qualified Data.Text as T
 
 
@@ -45,7 +46,9 @@ dropdown'' focusCol bgCol borderCol options cfg' = mdo
                             , bgColor .~~ bgCol
                             , custom .~ "font-[Sarabun] text-lg"
                             ]
-  let safeInitial = (snd . head $ Map.toList options)
+  let safeInitial = case Map.toList options of
+        [] -> error "dropdown' requires non-empty options map"
+        (k,v):_ -> v
   let cfg = cfg'
             & selectElementConfig_initialValue .~ safeInitial
             & selectElementConfig_setValue .~ optionsEvent

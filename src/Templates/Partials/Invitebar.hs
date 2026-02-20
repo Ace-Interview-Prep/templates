@@ -28,10 +28,7 @@ invitebar = invitebar' White (hex "E11D48") (hex "E11D48")
 invitebar' :: (PostBuild t m, DomBuilder t m, MonadHold t m, MonadFix m) => Color -> Color -> Color -> Text -> m (InputEl t m, Event t ())
 invitebar' bgCol borderCol textCol placeholder = do
   rec
-    let emailClass e = ffor (emailParse <$> e) $ \case
-          Right True -> classhUnsafe [border . bc .~~ borderCol, text_color .~~ textCol]
-          _ -> classhUnsafe [border . bc .~~ borderCol, text_color .~~ textCol]
-        emailText e = case emailParse e of
+    let emailText e = case emailParse e of
           Right True -> "Invitation sent to " <> e
           -- TODO: remove
           Right False -> "Email must be @aceinterviewprep.io"
@@ -79,10 +76,10 @@ invitebar' bgCol borderCol textCol placeholder = do
       invButton
 
   let
-    dynClass = 
-      fmap ( (<>) $(classh' [pl .~~ TWSize 1, pt .~~ TWSize 0, pb .~~ TWSize 1, pr .~~ TWSize 3, custom .~ "text-center"]))
+    dynClass =
+      fmap ( (<>) $(classh' [pl .~~ TWSize 1, pt .~~ TWSize 0, pb .~~ TWSize 1, pr .~~ TWSize 3, custom .~ "text-center"])
+           . (<>) (" text-[" <> showTW textCol <> "]"))
       $ toHide
-      <> (emailClass $ _inputElement_value invInput)
 
   elDynClass "div" dynClass
       $ dynText feedback

@@ -38,7 +38,7 @@ toggleButton' txtCol label = do
   -- the icon won't do a twirl on page load.
   rec
     (labelEl, _) <- elClass' "div" (classhUnsafe [ mt .~~ TWSize 8
-                                                 , cursor .~~ Cursor_Pointer
+                                                 , cursor .~~ CursorPointer
                                                  , custom .~ "flex flex-row justify-between"
                                                  ]) $ do
       textS (classhUnsafe [ text_color .~~ txtCol ]) label

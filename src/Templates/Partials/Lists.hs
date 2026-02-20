@@ -77,9 +77,9 @@ listItem cfg label = do
     topClass :: (Bool, Maybe Int) -> Text
     topClass (click, unread) = classhUnsafe $
       [ py .~~ TWSize 2
-      , border . bStyle . b .~~ BSolid
-      , border . bw_b .~~ B1
-      , border . bc_b .~~ _listItemConfig_borderColor cfg
+      , border . bStyle .~~ BSolid
+      , bw_b .~~ B1
+      , bc_b .~~ _listItemConfig_borderColor cfg
       ]
       <> case click of
           True -> [ cursor .~~ CursorPointer
