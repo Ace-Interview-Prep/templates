@@ -15,6 +15,7 @@ library
                      Templates.Partials.Lists
                      Templates.Partials.Modal
                      Templates.Partials.Searchbar
+                     Templates.Partials.Shapes
                      Templates.Partials.Errors
                      Templates.Partials.Invitebar
                      Templates.Types
