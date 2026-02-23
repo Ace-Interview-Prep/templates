@@ -22,11 +22,22 @@ emailParse _ = Right True
 -- | Builds an input bar for emails, it returns both the input and
 -- the button that sends it.
 invitebar :: (PostBuild t m, DomBuilder t m, MonadHold t m, MonadFix m) => Text -> m (InputEl t m, Event t ())
-invitebar = invitebar' White (hex "E11D48") (hex "E11D48")
+invitebar = invitebar'
+  (only (noTransition (solidColor White)))
+  (only (noTransition (solidColor Transparent)))
+  (only (noTransition (hex "E11D48")))
+  (only (hex "E11D48"))
 
 -- | Parameterized version with custom colors
-invitebar' :: (PostBuild t m, DomBuilder t m, MonadHold t m, MonadFix m) => Color -> Color -> Color -> Text -> m (InputEl t m, Event t ())
-invitebar' bgCol borderCol textCol placeholder = do
+invitebar'
+  :: (PostBuild t m, DomBuilder t m, MonadHold t m, MonadFix m)
+  => WhenTW (WithTransition GradientColor) -- ^ Container background color
+  -> WhenTW (WithTransition GradientColor) -- ^ Input background color
+  -> WhenTW (WithTransition Color) -- ^ Border color
+  -> WhenTW Color -- ^ Feedback text color
+  -> Text
+  -> m (InputEl t m, Event t ())
+invitebar' bgCol inputBgCol borderCol textCol placeholder = do
   rec
     let emailText e = case emailParse e of
           Right True -> "Invitation sent to " <> e
@@ -36,23 +47,23 @@ invitebar' bgCol borderCol textCol placeholder = do
     invbar@(invInput, invButton) <- elClass "div" (classhUnsafe [my .~~ TWSize 2
                                                             , w .~~ TWSize_Full
                                                             , custom .~ "shadow-button flex flex-row"
-                                                            , bgColor .~~ bgCol
+                                                            , bgColor .~ bgCol
                                                             , br .~~ R_Normal
                                                             ]) $ do
       elClass "button" $(classh' [ pl .~~ TWSize 2 ]) $ textS "font-icon text-icon" "email"
       invInput' <- inputElement $ def
         & initialAttributes .~
           ("class" =:
-            $(classh' [ w .~~ TWSize_Full
-                      , h .~~ TWSize_Full
-                      , bgColor .~~ Transparent
-                      , px .~~ TWSize 1
-                      , pt .~~ TWSize 3
-                      , pb .~~ TWSize 3
-                      , pr .~~ TWSize 2
-                      , custom .~ "focus:outline-none flex-grow placeholder-light font-label"
-                      ]
-             )            
+            (classhUnsafe [ w .~~ TWSize_Full
+                         , h .~~ TWSize_Full
+                         , bgColor .~ inputBgCol
+                         , px .~~ TWSize 1
+                         , pt .~~ TWSize 3
+                         , pb .~~ TWSize 3
+                         , pr .~~ TWSize 2
+                         , custom .~ "focus:outline-none flex-grow placeholder-light font-label"
+                         ]
+             )
           <> "placeholder" =: placeholder
           <> "type" =: "email"
           )
@@ -76,10 +87,15 @@ invitebar' bgCol borderCol textCol placeholder = do
       invButton
 
   let
-    dynClass =
-      fmap ( (<>) $(classh' [pl .~~ TWSize 1, pt .~~ TWSize 0, pb .~~ TWSize 1, pr .~~ TWSize 3, custom .~ "text-center"])
-           . (<>) (" text-[" <> showTW textCol <> "]"))
-      $ toHide
+    boxClass = classhUnsafe [ pl .~~ TWSize 1
+                            , pt .~~ TWSize 0
+                            , pb .~~ TWSize 1
+                            , pr .~~ TWSize 3
+                            , custom .~ "text-center"
+                            ]
+    textClass = classhUnsafe [text_color .~ textCol]
+    baseClass = boxClass <> " " <> textClass
+    dynClass = fmap (<> baseClass) toHide
 
   elDynClass "div" dynClass
       $ dynText feedback

@@ -68,20 +68,22 @@ sendButton = iconButton "send"
 
 
 navyBlueButton :: DomBuilder t m => Text -> m (Event t ())
-navyBlueButton = navyBlueButton' (C.hex "2E3A59") C.White
+navyBlueButton = navyBlueButton'
+  (C.only (C.noTransition (C.solidColor (C.hex "2E3A59"))))
+  (C.only C.White)
 
-navyBlueButton' :: DomBuilder t m => C.Color -> C.Color -> Text -> m (Event t ())
+navyBlueButton' :: DomBuilder t m => C.WhenTW (C.WithTransition C.GradientColor) -> C.WhenTW C.Color -> Text -> m (Event t ())
 navyBlueButton' bgCol txtCol buttonText = do
   (e, _) <- elClass' "button" boxCfg $ C.textS textCfg buttonText
   pure $ domEvent Click e
   where
-    textCfg = C.classhUnsafe [ C.text_color .~~ txtCol
+    textCfg = C.classhUnsafe [ C.text_color .~ txtCol
                              , C.text_font .~~ C.Font_Custom "Sarabun"
                              , C.text_weight .~~ C.Bold
                              ]
     boxCfg = C.classhUnsafe [ C.w .~~ C.TWSize_Full
                             , C.p .~~ C.TWSize 4
-                            , C.bgColor .~~ bgCol
+                            , C.bgColor .~ bgCol
                             , C.br .~~ C.R_3Xl
                             , C.shadow .~^ [("def", C.noTransition C.Shadow_Md)
                                             , ("hover", C.Shadow_Md `C.withTransition` C.Duration_300)
@@ -107,14 +109,16 @@ primaryButtonImageDyn
   -> Height
   -> Width
   -> m (Event t ())
-primaryButtonImageDyn = primaryButtonImageDyn' (C.hex "00B9DA") C.White
+primaryButtonImageDyn = primaryButtonImageDyn'
+  (C.only (C.noTransition (C.solidColor (C.hex "00B9DA"))))
+  (C.only C.White)
 
 primaryButtonImageDyn'
   :: ( PostBuild t m
      , DomBuilder t m
      )
-  => C.Color
-  -> C.Color
+  => C.WhenTW (C.WithTransition C.GradientColor)
+  -> C.WhenTW C.Color
   -> Dynamic t Text
   -> Height
   -> Width
@@ -129,7 +133,7 @@ primaryButtonImageDyn' bgCol txtCol dynImageHref height width = do
     boxCfg = C.classhUnsafe [ C.w .~~ C.TWSize_Full
                             , C.p .~~ C.TWSize 4
                             , C.mt .~~ C.TWSize 16
-                            , C.bgColor .~~ bgCol
+                            , C.bgColor .~ bgCol
                             , C.br .~~ C.R_Xl
                             , C.shadow .~^ [("def", C.noTransition C.Shadow_Md)
                                             , ("hover", C.Shadow_Md `C.withTransition` C.Duration_300)
@@ -148,29 +152,33 @@ primaryButtonImageDyn' bgCol txtCol dynImageHref height width = do
 type Height = Text
 type Width = Text
 primaryButtonImage :: DomBuilder t m => Text -> Height -> Width -> m (Event t ())
-primaryButtonImage = primaryButtonImage' (C.hex "00B9DA") C.White
+primaryButtonImage = primaryButtonImage'
+  (C.only (C.noTransition (C.solidColor (C.hex "00B9DA"))))
+  (C.only C.White)
 
-primaryButtonImage' :: DomBuilder t m => C.Color -> C.Color -> Text -> Height -> Width -> m (Event t ())
+primaryButtonImage' :: DomBuilder t m => C.WhenTW (C.WithTransition C.GradientColor) -> C.WhenTW C.Color -> Text -> Height -> Width -> m (Event t ())
 primaryButtonImage' bgCol _ imageHref height width = do
   (e, _) <- elClass' "button" (primaryButtonBoxCfg bgCol) $
     elAttr "img" ("src" =: imageHref <> "height" =: height <> "width" =: width <> "class" =: "block mx-auto") blank
   pure $ domEvent Click e
 
 primaryButtonImageText :: DomBuilder t m => Text -> Height -> Width -> Text -> m (Event t ())
-primaryButtonImageText = primaryButtonImageText' (C.hex "00B9DA") C.White
+primaryButtonImageText = primaryButtonImageText'
+  (C.only (C.noTransition (C.solidColor (C.hex "00B9DA"))))
+  (C.only C.White)
 
-primaryButtonImageText' :: DomBuilder t m => C.Color -> C.Color -> Text -> Height -> Width -> Text -> m (Event t ())
+primaryButtonImageText' :: DomBuilder t m => C.WhenTW (C.WithTransition C.GradientColor) -> C.WhenTW C.Color -> Text -> Height -> Width -> Text -> m (Event t ())
 primaryButtonImageText' bgCol _ imageHref height width bottomText = do
   (e, _) <- elClass' "button" (primaryButtonBoxCfg bgCol) $ do
     elAttr "img" ("src" =: imageHref <> "height" =: height <> "width" =: width <> "class" =: "block mx-auto") blank
     text bottomText
   pure $ domEvent Click e
 
-primaryButtonBoxCfg :: C.Color -> Text
+primaryButtonBoxCfg :: C.WhenTW (C.WithTransition C.GradientColor) -> Text
 primaryButtonBoxCfg bgCol = C.classhUnsafe [ C.w .~~ C.TWSize_Full
                                            , C.p .~~ C.TWSize 4
                                            , C.mt .~~ C.TWSize 16
-                                           , C.bgColor .~~ bgCol
+                                           , C.bgColor .~ bgCol
                                            , C.br .~~ C.R_Xl
                                            , C.shadow .~^ [("def", C.noTransition C.Shadow_Md)
                                                            , ("hover", C.Shadow_Md `C.withTransition` C.Duration_300)
@@ -186,9 +194,11 @@ primaryButtonBoxCfg bgCol = C.classhUnsafe [ C.w .~~ C.TWSize_Full
 
 
 primaryButtonSized :: DomBuilder t m => TWSize -> TWSize -> Text -> m (Event t ())
-primaryButtonSized = primaryButtonSized' (C.hex "00B9DA") C.White
+primaryButtonSized = primaryButtonSized'
+  (C.only (C.noTransition (C.solidColor (C.hex "00B9DA"))))
+  (C.only C.White)
 
-primaryButtonSized' :: DomBuilder t m => C.Color -> C.Color -> TWSize -> TWSize -> Text -> m (Event t ())
+primaryButtonSized' :: DomBuilder t m => C.WhenTW (C.WithTransition C.GradientColor) -> C.WhenTW C.Color -> TWSize -> TWSize -> Text -> m (Event t ())
 primaryButtonSized' bgCol _ height width buttonText = do
   (e, _) <- elAttr' "button" ("class" =: classCfg <> "name" =: name) $ text buttonText
   pure $ domEvent Click e
@@ -198,9 +208,11 @@ primaryButtonSized' bgCol _ height width buttonText = do
 
 
 primaryButton :: DomBuilder t m => Text -> m (Event t ())
-primaryButton = primaryButton' (C.hex "00B9DA") C.White
+primaryButton = primaryButton'
+  (C.only (C.noTransition (C.solidColor (C.hex "00B9DA"))))
+  (C.only C.White)
 
-primaryButton' :: DomBuilder t m => C.Color -> C.Color -> Text -> m (Event t ())
+primaryButton' :: DomBuilder t m => C.WhenTW (C.WithTransition C.GradientColor) -> C.WhenTW C.Color -> Text -> m (Event t ())
 primaryButton' bgCol _ buttonText = do
   (e, _) <- elAttr' "button" ("class" =: classCfg <> "name" =: name) $ text buttonText
   pure $ domEvent Click e
@@ -208,8 +220,8 @@ primaryButton' bgCol _ buttonText = do
     classCfg = primaryClass bgCol <&> C.classhUnsafe [C.py .~~ C.TWSize 4, C.px .~~ C.TWSize 8]
     name = T.filter (\c -> isAlphaNum c || isSpace c ) buttonText
 
-primaryClass :: C.Color -> Text
-primaryClass bgCol = C.classhUnsafe [ C.bgColor .~~ bgCol
+primaryClass :: C.WhenTW (C.WithTransition C.GradientColor) -> Text
+primaryClass bgCol = C.classhUnsafe [ C.bgColor .~ bgCol
                                     , C.br .~~ C.R_Xl
                                     , C.shadow .~^ [("def", C.noTransition C.Shadow_Md)
                                                     , ("hover", C.Shadow_Md `C.withTransition` C.Duration_300)

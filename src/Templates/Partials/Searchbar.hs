@@ -16,18 +16,22 @@ searchbar
   => Text
   -> Event t a
   -> m (InputEl t m)
-searchbar = searchbar' White Black
+searchbar = searchbar'
+  (only (noTransition (solidColor White)))
+  (only (noTransition (solidColor Transparent)))
+  (only Black)
 
 -- | Parameterized version with custom colors
 searchbar'
   :: DomBuilder t m
-  => Color -- ^ Background color
-  -> Color -- ^ Text color
+  => WhenTW (WithTransition GradientColor) -- ^ Container background color
+  -> WhenTW (WithTransition GradientColor) -- ^ Input background color
+  -> WhenTW Color -- ^ Text color
   -> Text
   -> Event t a
   -> m (InputEl t m)
-searchbar' bgCol txtCol placeholder clearEvent = do
-  elClass "div" (classhUnsafe [mt .~~ TWSize 0, w .~~ TWSize_Full, bgColor .~~ bgCol, br .~~ R_Normal, custom .~ "flex flex-row"]) $ do
+searchbar' bgCol inputBgCol txtCol placeholder clearEvent = do
+  elClass "div" (classhUnsafe [mt .~~ TWSize 0, w .~~ TWSize_Full, bgColor .~ bgCol, br .~~ R_Normal, custom .~ "flex flex-row"]) $ do
     elClass "button" (classhUnsafe [ px .~~ TWSize 3
                                    , br .~~ R_Normal
                                    , shadow .~~ Shadow_Md
@@ -36,14 +40,14 @@ searchbar' bgCol txtCol placeholder clearEvent = do
                                    ]) $ text "search"
     let inputClass = classhUnsafe [ w .~~ (pix 96)
                                   , h .~~ TWSize_Full
-                                  , bgColor .~~ Transparent
+                                  , bgColor .~ inputBgCol
                                   , pl .~~ TWSize 2
                                   , py .~~ TWSize 1
                                   , pr .~~ TWSize 3
                                   , border . outline .~ [("focus", Outline_None)]
                                   , custom .~ "flex-grow placeholder-light"
                                   ]
-                     <> classhUnsafe [ text_color .~~ txtCol
+                     <> classhUnsafe [ text_color .~ txtCol
                                      , text_weight .~~ Light
                                      , text_size .~~ XL
                                      , custom .~ "text-icon"

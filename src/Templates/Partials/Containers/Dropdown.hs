@@ -21,29 +21,32 @@ dropdown'
   => Map.Map a T.Text
   -> SelectElementConfig er t (DomBuilderSpace m)
   -> m (Dynamic t a)
-dropdown' = dropdown'' (hex "00B9DA") White (Gray C300)
+dropdown' = dropdown''
+  (only (noTransition (solidColor White)))
+  [ ("def", noTransition (Gray C300))
+  , ("focus", noTransition (hex "00B9DA"))
+  ]
 
 -- | Parameterized version with custom colors
 dropdown''
   :: ( MonadFix m
      , DomBuilder t m
      )
-  => Color -- ^ Focus border color
-  -> Color -- ^ Background color
-  -> Color -- ^ Default border color
+  => WhenTW (WithTransition GradientColor) -- ^ Background color
+  -> WhenTW (WithTransition Color) -- ^ Border color (including focus state)
   -> Map.Map a T.Text
   -> SelectElementConfig er t (DomBuilderSpace m)
   -> m (Dynamic t a)
-dropdown'' focusCol bgCol borderCol options cfg' = mdo
+dropdown'' bgCol borderCol options cfg' = mdo
   let class' = classhUnsafe [ w .~~ TWSize_Full
                             , px .~~ TWSize 4
                             , py .~~ TWSize 3
                             , bw .~~ B1
-                            , bc .~^ [("def", noTransition borderCol), ("focus", noTransition focusCol)]
+                            , bc .~ borderCol
                             , br .~~ R_Lg
                             , border . outline .~ [("focus", Outline_None)]
                             , mb .~~ TWSize 5
-                            , bgColor .~~ bgCol
+                            , bgColor .~ bgCol
                             , custom .~ "font-[Sarabun] text-lg"
                             ]
   let safeInitial = case Map.toList options of
@@ -72,30 +75,33 @@ dropdownWithDefault
   -> T.Text
   -> SelectElementConfig er t (DomBuilderSpace m)
   -> m (Dynamic t a)
-dropdownWithDefault = dropdownWithDefault' (hex "00B9DA") White (Gray C300)
+dropdownWithDefault = dropdownWithDefault'
+  (only (noTransition (solidColor White)))
+  [ ("def", noTransition (Gray C300))
+  , ("focus", noTransition (hex "00B9DA"))
+  ]
 
 -- | Parameterized version with custom colors
 dropdownWithDefault'
   :: ( MonadFix m
      , DomBuilder t m
      )
-  => Color -- ^ Focus border color
-  -> Color -- ^ Background color
-  -> Color -- ^ Default border color
+  => WhenTW (WithTransition GradientColor) -- ^ Background color
+  -> WhenTW (WithTransition Color) -- ^ Border color (including focus state)
   -> Map.Map a T.Text
   -> T.Text
   -> SelectElementConfig er t (DomBuilderSpace m)
   -> m (Dynamic t a)
-dropdownWithDefault' focusCol bgCol borderCol options start cfg' = mdo
+dropdownWithDefault' bgCol borderCol options start cfg' = mdo
   let class' = classhUnsafe [ w .~~ TWSize_Full
                             , px .~~ TWSize 4
                             , py .~~ TWSize 3
                             , bw .~~ B1
-                            , bc .~^ [("def", noTransition borderCol), ("focus", noTransition focusCol)]
+                            , bc .~ borderCol
                             , br .~~ R_Lg
                             , border . outline .~ [("focus", Outline_None)]
                             , mb .~~ TWSize 5
-                            , bgColor .~~ bgCol
+                            , bgColor .~ bgCol
                             ]
   let safeInitial = start
   let cfg = cfg'

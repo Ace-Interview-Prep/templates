@@ -13,35 +13,44 @@ import qualified Data.Text as T
 import Reflex.Dom.Core
 
 -- | Configuration for a list item.
+-- All color fields use WhenTW for full user control over states and transitions.
 data ListItemConfig t = ListItemConfig
   { _listItemConfig_clickable :: Dynamic t Bool
   , _listItemConfig_subtext :: Dynamic t (Maybe Text)
   , _listItemConfig_icon :: Dynamic t (Maybe Text)
   , _listItemConfig_highlight :: Dynamic t (Maybe Text)
   , _listItemConfig_unread :: Dynamic t (Maybe Int)
-  , _listItemConfig_hoverColor :: Color
-  , _listItemConfig_unreadColor :: Color
-  , _listItemConfig_borderColor :: Color
-  , _listItemConfig_textColor :: Color
-  , _listItemConfig_subtextColor :: Color
+  , _listItemConfig_bgColor :: WhenTW (WithTransition GradientColor)
+  , _listItemConfig_borderColor :: WhenTW (WithTransition Color)
+  , _listItemConfig_textColor :: WhenTW Color
+  , _listItemConfig_subtextColor :: WhenTW Color
   }
 
 -- | The default configuration for list items is to have no subtext, no
 -- icon, no highlighting information, and to not be clickable.
 -- Uses default dark theme colors.
 defListItemConfig :: Applicative (Dynamic t) => ListItemConfig t
-defListItemConfig = defListItemConfig' (hex "2E3A59") (hex "FF6D31") (hex "E5E7EB") White (hex "D1D5DB")
+defListItemConfig = defListItemConfig'
+  (only (noTransition (solidColor Transparent)))
+  (only (noTransition (hex "E5E7EB")))
+  (only White)
+  (only (hex "D1D5DB"))
 
 -- | Configurable version with custom colors
-defListItemConfig' :: Applicative (Dynamic t) => Color -> Color -> Color -> Color -> Color -> ListItemConfig t
-defListItemConfig' hoverCol unreadCol borderCol textCol subtextCol = ListItemConfig
+defListItemConfig'
+  :: Applicative (Dynamic t)
+  => WhenTW (WithTransition GradientColor) -- ^ Background color (user controls states/transitions)
+  -> WhenTW (WithTransition Color) -- ^ Border color
+  -> WhenTW Color -- ^ Text color
+  -> WhenTW Color -- ^ Subtext color
+  -> ListItemConfig t
+defListItemConfig' bgCol borderCol textCol subtextCol = ListItemConfig
   { _listItemConfig_clickable = pure False
   , _listItemConfig_subtext = pure Nothing
   , _listItemConfig_icon = pure Nothing
   , _listItemConfig_highlight = pure Nothing
   , _listItemConfig_unread = pure Nothing
-  , _listItemConfig_hoverColor = hoverCol
-  , _listItemConfig_unreadColor = unreadCol
+  , _listItemConfig_bgColor = bgCol
   , _listItemConfig_borderColor = borderCol
   , _listItemConfig_textColor = textCol
   , _listItemConfig_subtextColor = subtextCol
@@ -74,29 +83,21 @@ listItem
   -- 'never'.
 listItem cfg label = do
   let
-    topClass :: (Bool, Maybe Int) -> Text
-    topClass (click, unread) = classhUnsafe $
+    topClass :: Bool -> Text
+    topClass click = classhUnsafe $
       [ py .~~ TWSize 2
       , border . bStyle .~~ BSolid
       , bw_b .~~ B1
-      , bc_b .~~ _listItemConfig_borderColor cfg
+      , bc_b .~ _listItemConfig_borderColor cfg
+      , bgColor .~ _listItemConfig_bgColor cfg
       ]
-      <> case click of
-          True -> [ cursor .~~ CursorPointer
-                  , bgColor .~^ [("def", noTransition Transparent)
-                               , ("hover", noTransition $ _listItemConfig_hoverColor cfg)]
-                  ]
-          False -> []
-      <> case unread of
-           Just _ -> [ bgColor .~~ _listItemConfig_unreadColor cfg ]
-           Nothing -> []
-  let topClassDyn = topClass <$> ((,) <$> _listItemConfig_clickable cfg <*> _listItemConfig_unread cfg)
-
+      <> if click then [ cursor .~~ CursorPointer ] else []
+  let topClassDyn = topClass <$> _listItemConfig_clickable cfg
 
   (e, _) <- elDynClass' "div" topClassDyn $ do
 
     let labelClass = classhUnsafe [ custom .~ "leading-none font-facit text-body text-xl flex flex-row items-center gap-2 overflow-hidden"
-                                  , text_color .~~ _listItemConfig_textColor cfg
+                                  , text_color .~ _listItemConfig_textColor cfg
                                   ]
     elClass "div" labelClass $ do
       dyn_ $ ffor (_listItemConfig_icon cfg) $ \case
@@ -107,7 +108,7 @@ listItem cfg label = do
 
     dyn_ $ ffor (_listItemConfig_subtext cfg) $ \case
       Just subtext -> textS (classhUnsafe [ custom .~ "mt-1 leading-none font-facit text-label"
-                                          , text_color .~~ _listItemConfig_subtextColor cfg
+                                          , text_color .~ _listItemConfig_subtextColor cfg
                                           ]) subtext
       Nothing -> blank
 
