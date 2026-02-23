@@ -25,16 +25,16 @@ invitebar :: (PostBuild t m, DomBuilder t m, MonadHold t m, MonadFix m) => Text 
 invitebar = invitebar'
   (only (noTransition (solidColor White)))
   (only (noTransition (solidColor Transparent)))
-  (only (noTransition (hex "E11D48")))
-  (only (hex "E11D48"))
+  (only (noTransition (color (hex "E11D48"))))
+  (only (color (hex "E11D48")))
 
 -- | Parameterized version with custom colors
 invitebar'
   :: (PostBuild t m, DomBuilder t m, MonadHold t m, MonadFix m)
   => WhenTW (WithTransition GradientColor) -- ^ Container background color
   -> WhenTW (WithTransition GradientColor) -- ^ Input background color
-  -> WhenTW (WithTransition Color) -- ^ Border color
-  -> WhenTW Color -- ^ Feedback text color
+  -> WhenTW (WithTransition ColorWithOpacity) -- ^ Border color
+  -> WhenTW ColorWithOpacity -- ^ Feedback text color
   -> Text
   -> m (InputEl t m, Event t ())
 invitebar' bgCol inputBgCol borderCol textCol placeholder = do

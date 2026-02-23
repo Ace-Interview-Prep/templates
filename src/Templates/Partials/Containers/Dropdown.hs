@@ -23,8 +23,8 @@ dropdown'
   -> m (Dynamic t a)
 dropdown' = dropdown''
   (only (noTransition (solidColor White)))
-  [ ("def", noTransition (Gray C300))
-  , ("focus", noTransition (hex "00B9DA"))
+  [ ("def", noTransition (color (Gray C300)))
+  , ("focus", noTransition (color (hex "00B9DA")))
   ]
 
 -- | Parameterized version with custom colors
@@ -33,7 +33,7 @@ dropdown''
      , DomBuilder t m
      )
   => WhenTW (WithTransition GradientColor) -- ^ Background color
-  -> WhenTW (WithTransition Color) -- ^ Border color (including focus state)
+  -> WhenTW (WithTransition ColorWithOpacity) -- ^ Border color (including focus state)
   -> Map.Map a T.Text
   -> SelectElementConfig er t (DomBuilderSpace m)
   -> m (Dynamic t a)
@@ -77,8 +77,8 @@ dropdownWithDefault
   -> m (Dynamic t a)
 dropdownWithDefault = dropdownWithDefault'
   (only (noTransition (solidColor White)))
-  [ ("def", noTransition (Gray C300))
-  , ("focus", noTransition (hex "00B9DA"))
+  [ ("def", noTransition (color (Gray C300)))
+  , ("focus", noTransition (color (hex "00B9DA")))
   ]
 
 -- | Parameterized version with custom colors
@@ -87,7 +87,7 @@ dropdownWithDefault'
      , DomBuilder t m
      )
   => WhenTW (WithTransition GradientColor) -- ^ Background color
-  -> WhenTW (WithTransition Color) -- ^ Border color (including focus state)
+  -> WhenTW (WithTransition ColorWithOpacity) -- ^ Border color (including focus state)
   -> Map.Map a T.Text
   -> T.Text
   -> SelectElementConfig er t (DomBuilderSpace m)

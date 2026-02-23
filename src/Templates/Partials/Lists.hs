@@ -21,9 +21,9 @@ data ListItemConfig t = ListItemConfig
   , _listItemConfig_highlight :: Dynamic t (Maybe Text)
   , _listItemConfig_unread :: Dynamic t (Maybe Int)
   , _listItemConfig_bgColor :: WhenTW (WithTransition GradientColor)
-  , _listItemConfig_borderColor :: WhenTW (WithTransition Color)
-  , _listItemConfig_textColor :: WhenTW Color
-  , _listItemConfig_subtextColor :: WhenTW Color
+  , _listItemConfig_borderColor :: WhenTW (WithTransition ColorWithOpacity)
+  , _listItemConfig_textColor :: WhenTW ColorWithOpacity
+  , _listItemConfig_subtextColor :: WhenTW ColorWithOpacity
   }
 
 -- | The default configuration for list items is to have no subtext, no
@@ -32,17 +32,17 @@ data ListItemConfig t = ListItemConfig
 defListItemConfig :: Applicative (Dynamic t) => ListItemConfig t
 defListItemConfig = defListItemConfig'
   (only (noTransition (solidColor Transparent)))
-  (only (noTransition (hex "E5E7EB")))
-  (only White)
-  (only (hex "D1D5DB"))
+  (only (noTransition (color (hex "E5E7EB"))))
+  (only (color White))
+  (only (color (hex "D1D5DB")))
 
 -- | Configurable version with custom colors
 defListItemConfig'
   :: Applicative (Dynamic t)
   => WhenTW (WithTransition GradientColor) -- ^ Background color (user controls states/transitions)
-  -> WhenTW (WithTransition Color) -- ^ Border color
-  -> WhenTW Color -- ^ Text color
-  -> WhenTW Color -- ^ Subtext color
+  -> WhenTW (WithTransition ColorWithOpacity) -- ^ Border color
+  -> WhenTW ColorWithOpacity -- ^ Text color
+  -> WhenTW ColorWithOpacity -- ^ Subtext color
   -> ListItemConfig t
 defListItemConfig' bgCol borderCol textCol subtextCol = ListItemConfig
   { _listItemConfig_clickable = pure False

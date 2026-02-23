@@ -19,14 +19,14 @@ searchbar
 searchbar = searchbar'
   (only (noTransition (solidColor White)))
   (only (noTransition (solidColor Transparent)))
-  (only Black)
+  (only (color Black))
 
 -- | Parameterized version with custom colors
 searchbar'
   :: DomBuilder t m
   => WhenTW (WithTransition GradientColor) -- ^ Container background color
   -> WhenTW (WithTransition GradientColor) -- ^ Input background color
-  -> WhenTW Color -- ^ Text color
+  -> WhenTW ColorWithOpacity -- ^ Text color
   -> Text
   -> Event t a
   -> m (InputEl t m)

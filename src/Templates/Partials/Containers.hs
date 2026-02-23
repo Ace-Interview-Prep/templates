@@ -17,10 +17,10 @@ screenContainer :: (DomBuilder t m) => m a -> m a
 screenContainer = elClass "div" $(classh' [w .~~ TWSize_Screen, h .~~ TWSize_Screen, custom .~ "flex flex-col overflow-hidden"])
 
 toggleButton :: (MonadFix m, DomBuilder t m, PostBuild t m, MonadHold t m) => Text -> m (Dynamic t Bool)
-toggleButton = toggleButton' White
+toggleButton = toggleButton' (color White)
 
 -- | Parameterized version with custom text color
-toggleButton' :: (MonadFix m, DomBuilder t m, PostBuild t m, MonadHold t m) => Color -> Text -> m (Dynamic t Bool)
+toggleButton' :: (MonadFix m, DomBuilder t m, PostBuild t m, MonadHold t m) => ColorWithOpacity -> Text -> m (Dynamic t Bool)
 toggleButton' txtCol label = do
   let
     classes :: Bool -> Text
@@ -120,7 +120,7 @@ toggleButtonWithImage imgSrc label = do
 
 
 
-openCloseButton :: Template t m => ImgSrc -> Color -> T.Text -> m (Event t ())
+openCloseButton :: Template t m => ImgSrc -> ColorWithOpacity -> T.Text -> m (Event t ())
 openCloseButton imgSrc tColor name = do
   buttonToggleBody (constDyn "pl-10") True $ \case
     True -> do
