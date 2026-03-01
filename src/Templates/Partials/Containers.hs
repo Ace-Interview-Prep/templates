@@ -23,13 +23,14 @@ toggleButton = toggleButton' (color White)
 toggleButton' :: (MonadFix m, DomBuilder t m, PostBuild t m, MonadHold t m) => ColorWithOpacity -> Text -> m (Dynamic t Bool)
 toggleButton' txtCol label = do
   let
-    classes :: Bool -> Text
-    classes shown = classhUnsafe $
+    boxClasses :: Bool -> Text
+    boxClasses shown = classhUnsafe $
       [ custom .~ "text-icon font-icon select-none" ]
       <> (if shown
             then [ transform . rotate .~^ [("def", Rotate_0 `withTransition` Duration_300 `withTiming` Ease_InOut)] ]
             else [ transform . rotate .~^ [("def", Rotate_180 `withTransition` Duration_300 `withTiming` Ease_InOut)] ]
          )
+    textStyle = classhUnsafe [ text_color .~~ txtCol ]
 
   -- The icon for a rendered container is a triangle pointing up, and
   -- the icon for an unrendered container is that same triangle, rotated
@@ -42,7 +43,7 @@ toggleButton' txtCol label = do
                                                  , custom .~ "flex flex-row justify-between"
                                                  ]) $ do
       textS (classhUnsafe [ text_color .~~ txtCol ]) label
-      elDynClass' "span" (classes <$> toggled) $ text "expand_less"
+      elDynClass "span" (boxClasses <$> toggled) $ textS textStyle "expand_less"
     let toggleEv = domEvent Click labelEl
     toggled <- holdUniqDyn =<< toggle True toggleEv
 
