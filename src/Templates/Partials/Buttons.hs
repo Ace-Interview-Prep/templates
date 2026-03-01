@@ -12,19 +12,55 @@ import Data.Proxy
 import Data.Char (isAlphaNum, isSpace)
 
 iconButton :: DomBuilder t m => Text -> m (Event t ())
-iconButton icon = do
-  (e, _) <- elClass' "button" classes $ text icon
-  pure $ domEvent Click e
-  where
-    classes = "focus:outline-none bg-primary rounded p-2.5 w-[50%] font-icon text-icon text-white leading-none shadow-button h-[95%]"
+iconButton = iconButton'
+  (C.only (C.noTransition (C.solidColor (C.hex "A78BFA"))))  -- Default: bright lavender
+  (C.only (C.color C.White))
 
-iconButton' :: (DomBuilder t m, PostBuild t m) => Dynamic t Bool -> Text -> m (Event t ())
-iconButton' enabled icon = do
-  let attrs = ffor enabled $ \b -> if b then "class" =: classes else "class" =: classes <> "disabled" =: "1"
-  (e, _) <- elDynAttr' "button" attrs $ text icon
+iconButton'
+  :: DomBuilder t m
+  => C.WhenTW (C.WithTransition C.GradientColor)  -- ^ Background color (with states)
+  -> C.WhenTW C.ColorWithOpacity                   -- ^ Text/icon color
+  -> Text                                          -- ^ Icon name
+  -> m (Event t ())
+iconButton' bgCol txtCol icon = do
+  (e, _) <- elClass' "button" classes $ C.textS textCfg icon
   pure $ domEvent Click e
   where
-    classes = "focus:outline-none flex-shrink-0 bg-primary rounded p-2.5 font-icon text-icon text-white leading-none shadow-button"
+    textCfg = C.classhUnsafe
+      [ C.text_color .~ txtCol
+      , C.custom .~ "font-icon text-icon leading-none"
+      ]
+    classes = C.classhUnsafe
+      [ C.bgColor .~ bgCol
+      , C.br .~~ C.R_Normal
+      , C.p .~~ C.TWSize 2.5
+      , C.w .~~ C.pct 50
+      , C.h .~~ C.pct 95
+      , C.shadow .~~ C.Shadow_Md
+      , C.border . C.outline .~ [("focus", C.Outline_None)]
+      ]
+
+iconButtonEnabled :: (DomBuilder t m, PostBuild t m) => Dynamic t Bool -> Text -> m (Event t ())
+iconButtonEnabled enabled icon = do
+  let attrs = ffor enabled $ \b ->
+        if b
+        then "class" =: classes
+        else "class" =: classes <> "disabled" =: "1"
+  (e, _) <- elDynAttr' "button" attrs $ C.textS textCfg icon
+  pure $ domEvent Click e
+  where
+    textCfg = C.classhUnsafe
+      [ C.text_color .~~ C.color C.White
+      , C.custom .~ "font-icon text-icon leading-none"
+      ]
+    classes = C.classhUnsafe
+      [ C.bgColor .~~ C.solidColor (C.hex "A78BFA")
+      , C.br .~~ C.R_Normal
+      , C.p .~~ C.TWSize 2.5
+      , C.shadow .~~ C.Shadow_Md
+      , C.border . C.outline .~ [("focus", C.Outline_None)]
+      , C.custom .~ "flex-shrink-0"
+      ]
 
 
 

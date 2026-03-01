@@ -67,7 +67,7 @@ invitebar' bgCol inputBgCol borderCol textCol placeholder = do
           <> "placeholder" =: placeholder
           <> "type" =: "email"
           )
-      invButton' <- iconButton' toEnable "send"
+      invButton' <- iconButtonEnabled toEnable "send"
 
       return (invInput', invButton')
 
