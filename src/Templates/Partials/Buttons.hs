@@ -12,6 +12,9 @@ import Data.Proxy
 import Data.Char (isAlphaNum, isSpace)
 
 
+-- sendButton :: DomBuilder t m => m (Event t ())
+-- sendButton = iconButton "send"
+
 iconButton'
   :: DomBuilder t m
   => C.WhenTW (C.WithTransition C.GradientColor)  -- ^ Background color (with states)
@@ -172,9 +175,6 @@ secondaryButton bgCol txtCol borderCol ringCol cs label = do
       , C.border . C.ring . C.ringOpacity .~~ 50
       , C.custom .~ cs
       ]
-
-sendButton :: DomBuilder t m => m (Event t ())
-sendButton = iconButton "send"
 
 
 -- navyBlueButton :: DomBuilder t m => Text -> m (Event t ())

@@ -56,8 +56,8 @@ defListItemConfig' bgCol borderCol textCol subtextCol = ListItemConfig
   , _listItemConfig_subtextColor = subtextCol
   }
 
-instance Reflex t => Default (ListItemConfig t) where
-  def = defListItemConfig
+-- instance Reflex t => Default (ListItemConfig t) where
+--   def = defListItemConfig
 
 -- | Render the given 'Text' with highlighting given by the
 -- 'ListItemConfig'.

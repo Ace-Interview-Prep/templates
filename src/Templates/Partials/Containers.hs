@@ -55,21 +55,27 @@ toggleButton' txtCol label = do
 -- | Wrap the body contents in a container that can be collapsed by
 -- clicking on its header. As an optimisation, when the container is
 -- collapsed, the inner tree is not rendered.
-collapsibleContainer_ :: (MonadFix m, DomBuilder t m, PostBuild t m, MonadHold t m) => Text -> m a -> m ()
-collapsibleContainer_ label body = do
-  toggled <- toggleButton label
+collapsibleContainer_
+  :: (MonadFix m, DomBuilder t m, PostBuild t m, MonadHold t m)
+  => ColorWithOpacity  -- ^ Text color
+  -> Text -> m a -> m ()
+collapsibleContainer_ txtCol label body = do
+  toggled <- toggleButton' txtCol label
 
   dyn_ (bool blank (void body) <$> toggled)
 
 -- | Wrap the body contents in a container that can be collapsed by
 -- clicking on its header.
-collapsibleContainer :: (MonadFix m, DomBuilder t m, PostBuild t m, MonadHold t m) => Text -> m a -> m a
-collapsibleContainer label body = do
+collapsibleContainer
+  :: (MonadFix m, DomBuilder t m, PostBuild t m, MonadHold t m)
+  => ColorWithOpacity  -- ^ Text color
+  -> Text -> m a -> m a
+collapsibleContainer txtCol label body = do
   let
     bodyClasses :: Bool -> Text
     bodyClasses shown = bool "hidden" mempty shown
 
-  toggled <- toggleButton label
+  toggled <- toggleButton' txtCol label
 
   elDynClass "div" (bodyClasses <$> toggled) body
 

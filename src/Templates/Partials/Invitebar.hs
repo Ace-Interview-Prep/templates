@@ -35,9 +35,11 @@ invitebar'
   -> WhenTW (WithTransition GradientColor) -- ^ Input background color
   -> WhenTW (WithTransition ColorWithOpacity) -- ^ Border color
   -> WhenTW ColorWithOpacity -- ^ Feedback text color
+  -> GradientColor -- ^ Button background color
+  -> ColorWithOpacity -- ^ Button icon color
   -> Text
   -> m (InputEl t m, Event t ())
-invitebar' bgCol inputBgCol borderCol textCol placeholder = do
+invitebar' bgCol inputBgCol borderCol textCol btnBgCol btnIconCol placeholder = do
   rec
     let emailText e = case emailParse e of
           Right True -> "Invitation sent to " <> e
@@ -67,7 +69,7 @@ invitebar' bgCol inputBgCol borderCol textCol placeholder = do
           <> "placeholder" =: placeholder
           <> "type" =: "email"
           )
-      invButton' <- iconButtonEnabled toEnable "send"
+      invButton' <- iconButtonEnabled' btnBgCol btnIconCol toEnable "send"
 
       return (invInput', invButton')
 
