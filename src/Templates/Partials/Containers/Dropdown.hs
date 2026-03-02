@@ -14,18 +14,18 @@ import qualified Data.Text as T
 
 -- | TODO: take an element config for the options elements as well
 -- | TODO: clean up and upstream to reflex-dom-contrib
-dropdown'
-  :: ( MonadFix m
-     , DomBuilder t m
-     )
-  => Map.Map a T.Text
-  -> SelectElementConfig er t (DomBuilderSpace m)
-  -> m (Dynamic t a)
-dropdown' = dropdown''
-  (only (noTransition (solidColor White)))
-  [ ("def", noTransition (color (Gray C300)))
-  , ("focus", noTransition (color (Cyan C500)))
-  ]
+-- dropdown'
+--   :: ( MonadFix m
+--      , DomBuilder t m
+--      )
+--   => Map.Map a T.Text
+--   -> SelectElementConfig er t (DomBuilderSpace m)
+--   -> m (Dynamic t a)
+-- dropdown' = dropdown''
+--   (only (noTransition (solidColor White)))
+--   [ ("def", noTransition (color (Gray C300)))
+--   , ("focus", noTransition (color (Cyan C500)))
+--   ]
 
 -- | Parameterized version with custom colors
 dropdown''
@@ -67,19 +67,19 @@ dropdown'' bgCol borderCol options cfg' = mdo
       (e, _) <- elAttr' "option" ("value" =: optText) $ text optText
       pure $ optText <$ domEvent Click e
 
-dropdownWithDefault
-  :: ( MonadFix m
-     , DomBuilder t m
-     )
-  => Map.Map a T.Text
-  -> T.Text
-  -> SelectElementConfig er t (DomBuilderSpace m)
-  -> m (Dynamic t a)
-dropdownWithDefault = dropdownWithDefault'
-  (only (noTransition (solidColor White)))
-  [ ("def", noTransition (color (Gray C300)))
-  , ("focus", noTransition (color (Cyan C500)))
-  ]
+-- dropdownWithDefault
+--   :: ( MonadFix m
+--      , DomBuilder t m
+--      )
+--   => Map.Map a T.Text
+--   -> T.Text
+--   -> SelectElementConfig er t (DomBuilderSpace m)
+--   -> m (Dynamic t a)
+-- dropdownWithDefault = dropdownWithDefault'
+--   (only (noTransition (solidColor White)))
+--   [ ("def", noTransition (color (Gray C300)))
+--   , ("focus", noTransition (color (Cyan C500)))
+--   ]
 
 -- | Parameterized version with custom colors
 dropdownWithDefault'

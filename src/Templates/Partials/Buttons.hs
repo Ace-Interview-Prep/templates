@@ -11,10 +11,6 @@ import Control.Lens ((%~), (.~))
 import Data.Proxy
 import Data.Char (isAlphaNum, isSpace)
 
-iconButton :: DomBuilder t m => Text -> m (Event t ())
-iconButton = iconButton'
-  (C.only (C.noTransition (C.solidColor (C.hex "A78BFA"))))  -- Default: bright lavender
-  (C.only (C.color C.White))
 
 iconButton'
   :: DomBuilder t m
@@ -39,11 +35,6 @@ iconButton' bgCol txtCol icon = do
       , C.shadow .~~ C.Shadow_Md
       , C.border . C.outline .~ [("focus", C.Outline_None)]
       ]
-
-iconButtonEnabled :: (DomBuilder t m, PostBuild t m) => Dynamic t Bool -> Text -> m (Event t ())
-iconButtonEnabled = iconButtonEnabled'
-  (C.solidColor (C.Violet C.C400))  -- bright violet
-  (C.color C.White)
 
 iconButtonEnabled'
   :: (DomBuilder t m, PostBuild t m)
@@ -75,15 +66,15 @@ iconButtonEnabled' bgCol iconCol enabled icon = do
 
 
 
-primaryButtonDyn :: (DomBuilder t m, PostBuild t m) => Dynamic t Bool -> Text -> m (Event t ())
-primaryButtonDyn = primaryButtonDyn'
-  (C.only (C.noTransition (C.solidColor (C.Violet C.C600))))  -- bg
-  [("hover", C.solidColor (C.Violet C.C700) `C.withTransition` C.Duration_200)
-  ,("active", C.solidColor (C.Violet C.C500) `C.withTransition` C.Duration_100)]  -- bg states
-  (C.only (C.color C.White))  -- text
-  C.Shadow_Md  -- shadow
-  [("focus", C.noTransition C.Ring_4)]  -- ring
-  (C.color (C.Violet C.C500))  -- ring color
+-- primaryButtonDyn :: (DomBuilder t m, PostBuild t m) => Dynamic t Bool -> Text -> m (Event t ())
+-- primaryButtonDyn = primaryButtonDyn'
+--   (C.only (C.noTransition (C.solidColor (C.Violet C.C600))))  -- bg
+--   [("hover", C.solidColor (C.Violet C.C700) `C.withTransition` C.Duration_200)
+--   ,("active", C.solidColor (C.Violet C.C500) `C.withTransition` C.Duration_100)]  -- bg states
+--   (C.only (C.color C.White))  -- text
+--   C.Shadow_Md  -- shadow
+--   [("focus", C.noTransition C.Ring_4)]  -- ring
+--   (C.color (C.Violet C.C500))  -- ring color
 
 primaryButtonDyn'
   :: (DomBuilder t m, PostBuild t m)
@@ -186,13 +177,13 @@ sendButton :: DomBuilder t m => m (Event t ())
 sendButton = iconButton "send"
 
 
-navyBlueButton :: DomBuilder t m => Text -> m (Event t ())
-navyBlueButton = navyBlueButton'
-  (C.only (C.noTransition (C.solidColor (C.Slate C.C800))))  -- navy blue
-  [("hover", C.solidColor (C.Slate C.C700) `C.withTransition` C.Duration_200)
-  ,("active", C.solidColor (C.Slate C.C600) `C.withTransition` C.Duration_100)]
-  (C.only (C.color C.White))
-  (C.color (C.Violet C.C500))  -- ring color
+-- navyBlueButton :: DomBuilder t m => Text -> m (Event t ())
+-- navyBlueButton = navyBlueButton'
+--   (C.only (C.noTransition (C.solidColor (C.Violet C.C600))))  -- violet for visibility on dark bg
+--   [("hover", C.solidColor (C.Violet C.C500) `C.withTransition` C.Duration_200)
+--   ,("active", C.solidColor (C.Violet C.C400) `C.withTransition` C.Duration_100)]
+--   (C.only (C.color C.White))
+--   (C.color (C.Violet C.C300))  -- ring color
 
 navyBlueButton'
   :: DomBuilder t m
@@ -271,12 +262,12 @@ primaryButtonImageDyn bgCol bgStates ringCol dynImageHref height width = do
 
 type Height = Text
 type Width = Text
-primaryButtonImage :: DomBuilder t m => Text -> Height -> Width -> m (Event t ())
-primaryButtonImage = primaryButtonImage'
-  (C.only (C.noTransition (C.solidColor (C.Cyan C.C500))))
-  [("hover", C.solidColor (C.Cyan C.C600) `C.withTransition` C.Duration_200)
-  ,("active", C.solidColor (C.Cyan C.C400) `C.withTransition` C.Duration_100)]
-  (C.color (C.Cyan C.C500))
+-- primaryButtonImage :: DomBuilder t m => Text -> Height -> Width -> m (Event t ())
+-- primaryButtonImage = primaryButtonImage'
+--   (C.only (C.noTransition (C.solidColor (C.Cyan C.C500))))
+--   [("hover", C.solidColor (C.Cyan C.C600) `C.withTransition` C.Duration_200)
+--   ,("active", C.solidColor (C.Cyan C.C400) `C.withTransition` C.Duration_100)]
+--   (C.color (C.Cyan C.C500))
 
 primaryButtonImage'
   :: DomBuilder t m
@@ -332,13 +323,13 @@ primaryButtonBoxCfg bgCol bgStates ringCol = C.classhUnsafe
   ]
 
 
-primaryButtonSized :: DomBuilder t m => TWSize -> TWSize -> Text -> m (Event t ())
-primaryButtonSized = primaryButtonSized'
-  (C.only (C.noTransition (C.solidColor (C.Cyan C.C500))))
-  [("hover", C.solidColor (C.Cyan C.C600) `C.withTransition` C.Duration_200)
-  ,("active", C.solidColor (C.Cyan C.C400) `C.withTransition` C.Duration_100)]
-  (C.color C.White)
-  (C.color (C.Cyan C.C500))
+-- primaryButtonSized :: DomBuilder t m => TWSize -> TWSize -> Text -> m (Event t ())
+-- primaryButtonSized = primaryButtonSized'
+--   (C.only (C.noTransition (C.solidColor (C.Cyan C.C500))))
+--   [("hover", C.solidColor (C.Cyan C.C600) `C.withTransition` C.Duration_200)
+--   ,("active", C.solidColor (C.Cyan C.C400) `C.withTransition` C.Duration_100)]
+--   (C.color C.White)
+--   (C.color (C.Cyan C.C500))
 
 primaryButtonSized'
   :: DomBuilder t m
@@ -361,13 +352,13 @@ primaryButtonSized' bgCol bgStates txtCol ringCol height width buttonText = do
     name = T.filter (\c -> isAlphaNum c || isSpace c ) buttonText
 
 
-primaryButton :: DomBuilder t m => Text -> m (Event t ())
-primaryButton = primaryButton'
-  (C.only (C.noTransition (C.solidColor (C.Cyan C.C500))))
-  [("hover", C.solidColor (C.Cyan C.C600) `C.withTransition` C.Duration_200)
-  ,("active", C.solidColor (C.Cyan C.C400) `C.withTransition` C.Duration_100)]
-  (C.color C.White)
-  (C.color (C.Cyan C.C500))
+-- primaryButton :: DomBuilder t m => Text -> m (Event t ())
+-- primaryButton = primaryButton'
+--   (C.only (C.noTransition (C.solidColor (C.Cyan C.C500))))
+--   [("hover", C.solidColor (C.Cyan C.C600) `C.withTransition` C.Duration_200)
+--   ,("active", C.solidColor (C.Cyan C.C400) `C.withTransition` C.Duration_100)]
+--   (C.color C.White)
+--   (C.color (C.Cyan C.C500))
 
 primaryButton'
   :: DomBuilder t m

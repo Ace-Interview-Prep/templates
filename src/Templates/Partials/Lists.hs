@@ -29,12 +29,12 @@ data ListItemConfig t = ListItemConfig
 -- | The default configuration for list items is to have no subtext, no
 -- icon, no highlighting information, and to not be clickable.
 -- Uses default light theme colors (for dark backgrounds, use defListItemConfig' with custom colors).
-defListItemConfig :: Applicative (Dynamic t) => ListItemConfig t
-defListItemConfig = defListItemConfig'
-  (only (noTransition (solidColor Transparent)))  -- bg: transparent
-  (only (noTransition (color (Gray C200))))       -- border: gray-200
-  (only (color White))                            -- text: white
-  (only (color (Gray C300)))
+-- defListItemConfig :: Applicative (Dynamic t) => ListItemConfig t
+-- defListItemConfig = defListItemConfig'
+--   (only (noTransition (solidColor Transparent)))  -- bg: transparent
+--   (only (noTransition (color (Gray C200))))       -- border: gray-200
+--   (only (color White))                            -- text: white
+--   (only (color (Gray C300)))
 
 -- | Configurable version with custom colors
 defListItemConfig'

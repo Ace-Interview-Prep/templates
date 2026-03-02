@@ -33,9 +33,9 @@ maybeDisplay template val = dyn_ $ ffor val $ \case
 displayOn :: Template t m => (a -> m ()) -> Event t a -> m ()
 displayOn template ev = maybeDisplay template =<< holdDyn Nothing (Just <$> ev)
 
--- | Render an error message.
-errorMessage :: Template t m => Text -> m ()
-errorMessage = errorMessage' (withOpacity (Rose C500) 70)
+-- -- | Render an error message.
+-- errorMessage :: Template t m => Text -> m ()
+-- errorMessage = errorMessage' (withOpacity (Rose C500) 70)
 
 -- | Render an error message with custom text color.
 errorMessage' :: Template t m => ColorWithOpacity -> Text -> m ()

@@ -19,14 +19,14 @@ import Templates.Partials.Buttons
 emailParse :: a -> Either T.Text Bool
 emailParse _ = Right True
 
--- | Builds an input bar for emails, it returns both the input and
--- the button that sends it.
-invitebar :: (PostBuild t m, DomBuilder t m, MonadHold t m, MonadFix m) => Text -> m (InputEl t m, Event t ())
-invitebar = invitebar'
-  (only (noTransition (solidColor White)))
-  (only (noTransition (solidColor Transparent)))
-  (only (noTransition (color (Rose C600))))
-  (only (color (Rose C600)))
+-- -- | Builds an input bar for emails, it returns both the input and
+-- -- the button that sends it.
+-- invitebar :: (PostBuild t m, DomBuilder t m, MonadHold t m, MonadFix m) => Text -> m (InputEl t m, Event t ())
+-- invitebar = invitebar'
+--   (only (noTransition (solidColor White)))
+--   (only (noTransition (solidColor Transparent)))
+--   (only (noTransition (color (Rose C600))))
+--   (only (color (Rose C600)))
 
 -- | Parameterized version with custom colors
 invitebar'
@@ -101,3 +101,4 @@ invitebar' bgCol inputBgCol borderCol textCol placeholder = do
       $ dynText feedback
 
   return invbar
+

@@ -11,15 +11,15 @@ import Data.Text (Text)
 import Reflex.Dom.Core
 import Templates.Types
 
-searchbar
-  :: DomBuilder t m
-  => Text
-  -> Event t a
-  -> m (InputEl t m)
-searchbar = searchbar'
-  (only (noTransition (solidColor White)))
-  (only (noTransition (solidColor Transparent)))
-  (only (color Black))
+-- searchbar
+--   :: DomBuilder t m
+--   => Text
+--   -> Event t a
+--   -> m (InputEl t m)
+-- searchbar = searchbar'
+--   (only (noTransition (solidColor White)))
+--   (only (noTransition (solidColor Transparent)))
+--   (only (color Black))
 
 -- | Parameterized version with custom colors
 searchbar'

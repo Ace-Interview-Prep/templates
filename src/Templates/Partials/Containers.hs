@@ -16,8 +16,8 @@ import Reflex.Dom.Core
 screenContainer :: (DomBuilder t m) => m a -> m a
 screenContainer = elClass "div" $(classh' [w .~~ TWSize_Screen, h .~~ TWSize_Screen, custom .~ "flex flex-col overflow-hidden"])
 
-toggleButton :: (MonadFix m, DomBuilder t m, PostBuild t m, MonadHold t m) => Text -> m (Dynamic t Bool)
-toggleButton = toggleButton' (color White)
+-- toggleButton :: (MonadFix m, DomBuilder t m, PostBuild t m, MonadHold t m) => Text -> m (Dynamic t Bool)
+-- toggleButton = toggleButton' (color White)
 
 -- | Parameterized version with custom text color
 toggleButton' :: (MonadFix m, DomBuilder t m, PostBuild t m, MonadHold t m) => ColorWithOpacity -> Text -> m (Dynamic t Bool)

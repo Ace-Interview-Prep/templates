@@ -11,21 +11,21 @@ import Control.Monad.Fix
 import Data.Text as T
 
 
-modal :: ( DomBuilder t m
-         , MonadFix m
-         , MonadHold t m
-         , PostBuild t m
-         )
-  => ImgSrc
-  -> Event t ()
-  -> m a
-  -> m (Event t a)
-modal = modal'
-  (C.solidColorOpacity C.Black 40)  -- overlay background
-  (C.solidColor (C.Slate C.C900))   -- content background (dark navy)
-  (C.color C.Black)                 -- border color
-  (C.color C.White)                 -- text color
-  (C.color (C.Rose C.C500))         -- close button color
+-- modal :: ( DomBuilder t m
+--          , MonadFix m
+--          , MonadHold t m
+--          , PostBuild t m
+--          )
+--   => ImgSrc
+--   -> Event t ()
+--   -> m a
+--   -> m (Event t a)
+-- modal = modal'
+--   (C.solidColorOpacity C.Black 40)  -- overlay background
+--   (C.solidColor (C.Slate C.C900))   -- content background (dark navy)
+--   (C.color C.Black)                 -- border color
+--   (C.color C.White)                 -- text color
+--   (C.color (C.Rose C.C500))         -- close button color
 
 modal'
   :: ( DomBuilder t m
