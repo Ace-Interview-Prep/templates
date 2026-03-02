@@ -24,7 +24,7 @@ dropdown'
 dropdown' = dropdown''
   (only (noTransition (solidColor White)))
   [ ("def", noTransition (color (Gray C300)))
-  , ("focus", noTransition (color (hex "00B9DA")))
+  , ("focus", noTransition (color (Cyan C500)))
   ]
 
 -- | Parameterized version with custom colors
@@ -78,7 +78,7 @@ dropdownWithDefault
 dropdownWithDefault = dropdownWithDefault'
   (only (noTransition (solidColor White)))
   [ ("def", noTransition (color (Gray C300)))
-  , ("focus", noTransition (color (hex "00B9DA")))
+  , ("focus", noTransition (color (Cyan C500)))
   ]
 
 -- | Parameterized version with custom colors

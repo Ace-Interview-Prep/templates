@@ -41,7 +41,18 @@ iconButton' bgCol txtCol icon = do
       ]
 
 iconButtonEnabled :: (DomBuilder t m, PostBuild t m) => Dynamic t Bool -> Text -> m (Event t ())
-iconButtonEnabled enabled icon = do
+iconButtonEnabled = iconButtonEnabled'
+  (C.solidColor (C.Violet C.C400))  -- bright violet
+  (C.color C.White)
+
+iconButtonEnabled'
+  :: (DomBuilder t m, PostBuild t m)
+  => C.GradientColor      -- ^ Background color
+  -> C.ColorWithOpacity   -- ^ Icon color
+  -> Dynamic t Bool
+  -> Text
+  -> m (Event t ())
+iconButtonEnabled' bgCol iconCol enabled icon = do
   let attrs = ffor enabled $ \b ->
         if b
         then "class" =: classes
@@ -50,11 +61,11 @@ iconButtonEnabled enabled icon = do
   pure $ domEvent Click e
   where
     textCfg = C.classhUnsafe
-      [ C.text_color .~~ C.color C.White
+      [ C.text_color .~~ iconCol
       , C.custom .~ "font-icon text-icon leading-none"
       ]
     classes = C.classhUnsafe
-      [ C.bgColor .~~ C.solidColor (C.hex "A78BFA")
+      [ C.bgColor .~~ bgCol
       , C.br .~~ C.R_Normal
       , C.p .~~ C.TWSize 2.5
       , C.shadow .~~ C.Shadow_Md
@@ -65,39 +76,111 @@ iconButtonEnabled enabled icon = do
 
 
 primaryButtonDyn :: (DomBuilder t m, PostBuild t m) => Dynamic t Bool -> Text -> m (Event t ())
-primaryButtonDyn enabled buttonText = do
+primaryButtonDyn = primaryButtonDyn'
+  (C.only (C.noTransition (C.solidColor (C.Violet C.C600))))  -- bg
+  [("hover", C.solidColor (C.Violet C.C700) `C.withTransition` C.Duration_200)
+  ,("active", C.solidColor (C.Violet C.C500) `C.withTransition` C.Duration_100)]  -- bg states
+  (C.only (C.color C.White))  -- text
+  C.Shadow_Md  -- shadow
+  [("focus", C.noTransition C.Ring_4)]  -- ring
+  (C.color (C.Violet C.C500))  -- ring color
+
+primaryButtonDyn'
+  :: (DomBuilder t m, PostBuild t m)
+  => C.WhenTW (C.WithTransition C.GradientColor)  -- ^ Background color
+  -> [(C.TWCondition, C.WithTransition C.GradientColor)]  -- ^ Background hover/active states
+  -> C.WhenTW C.ColorWithOpacity                   -- ^ Text color
+  -> C.BoxShadow                                   -- ^ Shadow
+  -> [(C.TWCondition, C.WithTransition C.RingWidth)]  -- ^ Ring width states
+  -> C.ColorWithOpacity                            -- ^ Ring color
+  -> Dynamic t Bool
+  -> Text
+  -> m (Event t ())
+primaryButtonDyn' bgCol bgStates txtCol shadowVal ringStates ringCol enabled buttonText = do
   let attrs = ffor enabled $ \b -> if b then "class" =: classes else "class" =: classes <> "disabled" =: "1"
-  (e, _) <- elDynAttr' "button" attrs $ text buttonText
+  (e, _) <- elDynAttr' "button" attrs $ C.textS textCfg buttonText
   pure $ domEvent Click e
   where
-    classes =
-      "focus:outline-none w-full p-4 mt-12 shadow-button bg-primary \
-      \ font-facit font-bold text-white text-body text-center rounded \
-      \ hover:bg-primary-rich active:bg-primary-desaturated \
-      \ focus:ring-4 ring-primary ring-opacity-50"
+    textCfg = C.classhUnsafe
+      [ C.text_color .~ txtCol
+      , C.text_weight .~~ C.Bold
+      , C.custom .~ "font-facit text-body text-center"
+      ]
+    classes = C.classhUnsafe
+      [ C.bgColor .~ bgCol
+      , C.bgColor .~^ bgStates
+      , C.w .~~ C.TWSize_Full
+      , C.p .~~ C.TWSize 4
+      , C.mt .~~ C.TWSize 12
+      , C.shadow .~~ shadowVal
+      , C.br .~~ C.R_Normal
+      , C.border . C.outline .~ [("focus", C.Outline_None)]
+      , C.border . C.ring . C.ringWidth .~ ringStates
+      , C.border . C.ring . C.ringColor .~~ ringCol
+      , C.border . C.ring . C.ringOpacity .~~ 50
+      ]
 
-secondaryIconButton :: DomBuilder t m => Text -> Text -> m (Event t ())
-secondaryIconButton cs icon = do
+secondaryIconButton
+  :: DomBuilder t m
+  => C.GradientColor      -- ^ Background color
+  -> C.ColorWithOpacity   -- ^ Icon color
+  -> C.ColorWithOpacity   -- ^ Border color
+  -> C.ColorWithOpacity   -- ^ Ring color
+  -> Text                 -- ^ Extra classes
+  -> Text                 -- ^ Icon name
+  -> m (Event t ())
+secondaryIconButton bgCol iconCol borderCol ringCol cs icon = do
   (e, _) <- elClass' "button" classes $
-    elClass "div" "font-icon leading-none text-icon text-primary-dark" $ text icon
+    elClass "div" iconClasses $ C.textS iconTextCfg icon
   pure $ domEvent Click e
   where
-    classes =
-      "focus:outline-none rounded border border-metaline \
-      \ focus:ring-4 ring-primary ring-opacity-50 \
-      \ p-2.5 flex-shrink-0 bg-primary-light " <> cs
+    iconTextCfg = C.classhUnsafe [ C.text_color .~~ iconCol ]
+    iconClasses = C.classhUnsafe [ C.box_custom .~ "font-icon leading-none text-icon" ]
+    classes = C.classhUnsafe
+      [ C.bgColor .~~ bgCol
+      , C.bc .~~ borderCol
+      , C.bw .~~ C.B1
+      , C.br .~~ C.R_Normal
+      , C.p .~~ C.TWSize 2.5
+      , C.border . C.outline .~ [("focus", C.Outline_None)]
+      , C.border . C.ring . C.ringWidth .~ [("focus", C.noTransition C.Ring_4)]
+      , C.border . C.ring . C.ringColor .~~ ringCol
+      , C.border . C.ring . C.ringOpacity .~~ 50
+      , C.custom .~ ("flex-shrink-0 " <> cs)
+      ]
 
 
-secondaryButton :: DomBuilder t m => Text -> Text -> m (Event t ())
-secondaryButton cs label = do
-  (e, _) <- elClass' "button" classes $
-    text label
+secondaryButton
+  :: DomBuilder t m
+  => C.GradientColor      -- ^ Background color
+  -> C.ColorWithOpacity   -- ^ Text color
+  -> C.ColorWithOpacity   -- ^ Border color
+  -> C.ColorWithOpacity   -- ^ Ring color
+  -> Text                 -- ^ Extra classes
+  -> Text                 -- ^ Label
+  -> m (Event t ())
+secondaryButton bgCol txtCol borderCol ringCol cs label = do
+  (e, _) <- elClass' "button" classes $ C.textS textCfg label
   pure $ domEvent Click e
   where
-    classes =
-      "w-full p-2.5 leading-none text-center rounded border border-metaline \
-      \ bg-primary-light text-primary-darker font-bold font-facit focus:outline-none \
-      \ focus:ring-4 ring-primary ring-opacity-50 " <> cs
+    textCfg = C.classhUnsafe
+      [ C.text_color .~~ txtCol
+      , C.text_weight .~~ C.Bold
+      , C.custom .~ "font-facit leading-none text-center"
+      ]
+    classes = C.classhUnsafe
+      [ C.bgColor .~~ bgCol
+      , C.bc .~~ borderCol
+      , C.bw .~~ C.B1
+      , C.br .~~ C.R_Normal
+      , C.w .~~ C.TWSize_Full
+      , C.p .~~ C.TWSize 2.5
+      , C.border . C.outline .~ [("focus", C.Outline_None)]
+      , C.border . C.ring . C.ringWidth .~ [("focus", C.noTransition C.Ring_4)]
+      , C.border . C.ring . C.ringColor .~~ ringCol
+      , C.border . C.ring . C.ringOpacity .~~ 50
+      , C.custom .~ cs
+      ]
 
 sendButton :: DomBuilder t m => m (Event t ())
 sendButton = iconButton "send"
@@ -105,11 +188,21 @@ sendButton = iconButton "send"
 
 navyBlueButton :: DomBuilder t m => Text -> m (Event t ())
 navyBlueButton = navyBlueButton'
-  (C.only (C.noTransition (C.solidColor (C.hex "2E3A59"))))
+  (C.only (C.noTransition (C.solidColor (C.Slate C.C800))))  -- navy blue
+  [("hover", C.solidColor (C.Slate C.C700) `C.withTransition` C.Duration_200)
+  ,("active", C.solidColor (C.Slate C.C600) `C.withTransition` C.Duration_100)]
   (C.only (C.color C.White))
+  (C.color (C.Violet C.C500))  -- ring color
 
-navyBlueButton' :: DomBuilder t m => C.WhenTW (C.WithTransition C.GradientColor) -> C.WhenTW C.ColorWithOpacity -> Text -> m (Event t ())
-navyBlueButton' bgCol txtCol buttonText = do
+navyBlueButton'
+  :: DomBuilder t m
+  => C.WhenTW (C.WithTransition C.GradientColor)  -- ^ Background color
+  -> [(C.TWCondition, C.WithTransition C.GradientColor)]  -- ^ Background hover/active states
+  -> C.WhenTW C.ColorWithOpacity  -- ^ Text color
+  -> C.ColorWithOpacity  -- ^ Ring color
+  -> Text
+  -> m (Event t ())
+navyBlueButton' bgCol bgStates txtCol ringCol buttonText = do
   (e, _) <- elClass' "button" boxCfg $ C.textS textCfg buttonText
   pure $ domEvent Click e
   where
@@ -120,16 +213,17 @@ navyBlueButton' bgCol txtCol buttonText = do
     boxCfg = C.classhUnsafe [ C.w .~~ C.TWSize_Full
                             , C.p .~~ C.TWSize 4
                             , C.bgColor .~ bgCol
+                            , C.bgColor .~^ bgStates
                             , C.br .~~ C.R_3Xl
                             , C.shadow .~^ [("def", C.noTransition C.Shadow_Md)
                                             , ("hover", C.Shadow_Md `C.withTransition` C.Duration_300)
                                             ]
                             , C.border . C.outline .~ [("focus", C.Outline_None)]
                             , C.border . C.ring . C.ringWidth .~ [("focus", C.noTransition C.Ring_4)]
+                            , C.border . C.ring . C.ringColor .~~ ringCol
                             , C.border . C.ring . C.ringOpacity .~~ 50
-                            , C.custom .~ "ring-primary \
-                                          \ hover:bg-primary-rich active:bg-primary-desaturated \
-                                          \ transform hover:scale-105 active:scale-95"
+                            , C.transform . C.scale .~^ [("hover", C.Scale_105 `C.withTransition` C.Duration_200)
+                                                        ,("active", C.Scale_95 `C.withTransition` C.Duration_100)]
                             ]
 
 
@@ -141,25 +235,14 @@ primaryButtonImageDyn
   :: ( PostBuild t m
      , DomBuilder t m
      )
-  => Dynamic t Text
-  -> Height
-  -> Width
-  -> m (Event t ())
-primaryButtonImageDyn = primaryButtonImageDyn'
-  (C.only (C.noTransition (C.solidColor (C.hex "00B9DA"))))
-  (C.only (C.color C.White))
-
-primaryButtonImageDyn'
-  :: ( PostBuild t m
-     , DomBuilder t m
-     )
-  => C.WhenTW (C.WithTransition C.GradientColor)
-  -> C.WhenTW C.ColorWithOpacity
+  => C.WhenTW (C.WithTransition C.GradientColor)  -- ^ Background color
+  -> [(C.TWCondition, C.WithTransition C.GradientColor)]  -- ^ Background hover/active states
+  -> C.ColorWithOpacity  -- ^ Ring color
   -> Dynamic t Text
   -> Height
   -> Width
   -> m (Event t ())
-primaryButtonImageDyn' bgCol txtCol dynImageHref height width = do
+primaryButtonImageDyn bgCol bgStates ringCol dynImageHref height width = do
   (e, _) <- elClass' "button" boxCfg $
     elDynAttr "img" imgAttrs blank
   pure $ domEvent Click e
@@ -170,17 +253,18 @@ primaryButtonImageDyn' bgCol txtCol dynImageHref height width = do
                             , C.p .~~ C.TWSize 4
                             , C.mt .~~ C.TWSize 16
                             , C.bgColor .~ bgCol
+                            , C.bgColor .~^ bgStates
                             , C.br .~~ C.R_Xl
                             , C.shadow .~^ [("def", C.noTransition C.Shadow_Md)
                                             , ("hover", C.Shadow_Md `C.withTransition` C.Duration_300)
                                             ]
                             , C.border . C.outline .~ [("focus", C.Outline_None)]
                             , C.border . C.ring . C.ringWidth .~ [("focus", C.noTransition C.Ring_4)]
+                            , C.border . C.ring . C.ringColor .~~ ringCol
                             , C.border . C.ring . C.ringOpacity .~~ 50
-                            , C.custom .~ "font-[Sarabun] font-bold text-white text-body text-center \
-                                          \ ring-primary \
-                                          \ hover:bg-primary-rich active:bg-primary-desaturated \
-                                          \ transform hover:scale-105 active:scale-95"
+                            , C.transform . C.scale .~^ [("hover", C.Scale_105 `C.withTransition` C.Duration_200)
+                                                        ,("active", C.Scale_95 `C.withTransition` C.Duration_100)]
+                            , C.custom .~ "font-[Sarabun] font-bold text-white text-body text-center"
                             ]
 
 
@@ -189,89 +273,142 @@ type Height = Text
 type Width = Text
 primaryButtonImage :: DomBuilder t m => Text -> Height -> Width -> m (Event t ())
 primaryButtonImage = primaryButtonImage'
-  (C.only (C.noTransition (C.solidColor (C.hex "00B9DA"))))
-  (C.only (C.color C.White))
+  (C.only (C.noTransition (C.solidColor (C.Cyan C.C500))))
+  [("hover", C.solidColor (C.Cyan C.C600) `C.withTransition` C.Duration_200)
+  ,("active", C.solidColor (C.Cyan C.C400) `C.withTransition` C.Duration_100)]
+  (C.color (C.Cyan C.C500))
 
-primaryButtonImage' :: DomBuilder t m => C.WhenTW (C.WithTransition C.GradientColor) -> C.WhenTW C.ColorWithOpacity -> Text -> Height -> Width -> m (Event t ())
-primaryButtonImage' bgCol _ imageHref height width = do
-  (e, _) <- elClass' "button" (primaryButtonBoxCfg bgCol) $
+primaryButtonImage'
+  :: DomBuilder t m
+  => C.WhenTW (C.WithTransition C.GradientColor)  -- ^ Background color
+  -> [(C.TWCondition, C.WithTransition C.GradientColor)]  -- ^ Background hover/active states
+  -> C.ColorWithOpacity  -- ^ Ring color
+  -> Text -> Height -> Width -> m (Event t ())
+primaryButtonImage' bgCol bgStates ringCol imageHref height width = do
+  (e, _) <- elClass' "button" (primaryButtonBoxCfg bgCol bgStates ringCol) $
     elAttr "img" ("src" =: imageHref <> "height" =: height <> "width" =: width <> "class" =: "block mx-auto") blank
   pure $ domEvent Click e
 
-primaryButtonImageText :: DomBuilder t m => Text -> Height -> Width -> Text -> m (Event t ())
-primaryButtonImageText = primaryButtonImageText'
-  (C.only (C.noTransition (C.solidColor (C.hex "00B9DA"))))
-  (C.only (C.color C.White))
-
-primaryButtonImageText' :: DomBuilder t m => C.WhenTW (C.WithTransition C.GradientColor) -> C.WhenTW C.ColorWithOpacity -> Text -> Height -> Width -> Text -> m (Event t ())
-primaryButtonImageText' bgCol _ imageHref height width bottomText = do
-  (e, _) <- elClass' "button" (primaryButtonBoxCfg bgCol) $ do
+primaryButtonImageText
+  :: DomBuilder t m
+  => C.WhenTW (C.WithTransition C.GradientColor)  -- ^ Background color
+  -> [(C.TWCondition, C.WithTransition C.GradientColor)]  -- ^ Background hover/active states
+  -> C.ColorWithOpacity  -- ^ Text color
+  -> C.ColorWithOpacity  -- ^ Ring color
+  -> Text -> Height -> Width -> Text -> m (Event t ())
+primaryButtonImageText bgCol bgStates txtCol ringCol imageHref height width bottomText = do
+  (e, _) <- elClass' "button" (primaryButtonBoxCfg bgCol bgStates ringCol) $ do
     elAttr "img" ("src" =: imageHref <> "height" =: height <> "width" =: width <> "class" =: "block mx-auto") blank
-    text bottomText
+    C.textS textCfg bottomText
   pure $ domEvent Click e
+  where
+    textCfg = C.classhUnsafe [ C.text_color .~~ txtCol
+                             , C.text_font .~~ C.Font_Custom "Sarabun"
+                             , C.text_weight .~~ C.Bold
+                             ]
 
-primaryButtonBoxCfg :: C.WhenTW (C.WithTransition C.GradientColor) -> Text
-primaryButtonBoxCfg bgCol = C.classhUnsafe [ C.w .~~ C.TWSize_Full
-                                           , C.p .~~ C.TWSize 4
-                                           , C.mt .~~ C.TWSize 16
-                                           , C.bgColor .~ bgCol
-                                           , C.br .~~ C.R_Xl
-                                           , C.shadow .~^ [("def", C.noTransition C.Shadow_Md)
-                                                           , ("hover", C.Shadow_Md `C.withTransition` C.Duration_300)
-                                                           ]
-                                           , C.border . C.outline .~ [("focus", C.Outline_None)]
-                                           , C.border . C.ring . C.ringWidth .~ [("focus", C.noTransition C.Ring_4)]
-                                           , C.border . C.ring . C.ringOpacity .~~ 50
-                                           , C.custom .~ "font-[Sarabun] font-bold text-white text-body text-center \
-                                                           \ ring-primary \
-                                                           \ hover:bg-primary-rich active:bg-primary-desaturated \
-                                                           \ transform hover:scale-105 active:scale-95"
-                                           ]
+primaryButtonBoxCfg
+  :: C.WhenTW (C.WithTransition C.GradientColor)  -- ^ Background color
+  -> [(C.TWCondition, C.WithTransition C.GradientColor)]  -- ^ Background hover/active states
+  -> C.ColorWithOpacity  -- ^ Ring color
+  -> Text
+primaryButtonBoxCfg bgCol bgStates ringCol = C.classhUnsafe
+  [ C.w .~~ C.TWSize_Full
+  , C.p .~~ C.TWSize 4
+  , C.mt .~~ C.TWSize 16
+  , C.bgColor .~ bgCol
+  , C.bgColor .~^ bgStates
+  , C.br .~~ C.R_Xl
+  , C.shadow .~^ [("def", C.noTransition C.Shadow_Md)
+                  , ("hover", C.Shadow_Md `C.withTransition` C.Duration_300)
+                  ]
+  , C.border . C.outline .~ [("focus", C.Outline_None)]
+  , C.border . C.ring . C.ringWidth .~ [("focus", C.noTransition C.Ring_4)]
+  , C.border . C.ring . C.ringColor .~~ ringCol
+  , C.border . C.ring . C.ringOpacity .~~ 50
+  , C.transform . C.scale .~^ [("hover", C.Scale_105 `C.withTransition` C.Duration_200)
+                              ,("active", C.Scale_95 `C.withTransition` C.Duration_100)]
+  , C.custom .~ "text-center"
+  ]
 
 
 primaryButtonSized :: DomBuilder t m => TWSize -> TWSize -> Text -> m (Event t ())
 primaryButtonSized = primaryButtonSized'
-  (C.only (C.noTransition (C.solidColor (C.hex "00B9DA"))))
-  (C.only (C.color C.White))
+  (C.only (C.noTransition (C.solidColor (C.Cyan C.C500))))
+  [("hover", C.solidColor (C.Cyan C.C600) `C.withTransition` C.Duration_200)
+  ,("active", C.solidColor (C.Cyan C.C400) `C.withTransition` C.Duration_100)]
+  (C.color C.White)
+  (C.color (C.Cyan C.C500))
 
-primaryButtonSized' :: DomBuilder t m => C.WhenTW (C.WithTransition C.GradientColor) -> C.WhenTW C.ColorWithOpacity -> TWSize -> TWSize -> Text -> m (Event t ())
-primaryButtonSized' bgCol _ height width buttonText = do
-  (e, _) <- elAttr' "button" ("class" =: classCfg <> "name" =: name) $ text buttonText
+primaryButtonSized'
+  :: DomBuilder t m
+  => C.WhenTW (C.WithTransition C.GradientColor)  -- ^ Background color
+  -> [(C.TWCondition, C.WithTransition C.GradientColor)]  -- ^ Background hover/active states
+  -> C.ColorWithOpacity  -- ^ Text color
+  -> C.ColorWithOpacity  -- ^ Ring color
+  -> TWSize -> TWSize -> Text -> m (Event t ())
+primaryButtonSized' bgCol bgStates txtCol ringCol height width buttonText = do
+  (e, _) <- elAttr' "button" ("class" =: classCfg <> "name" =: name) $
+    C.textS textCfg buttonText
   pure $ domEvent Click e
   where
-    classCfg = primaryClass bgCol <&> C.classhUnsafe [C.py .~~ height, C.px .~~ width]
+    textCfg = C.classhUnsafe [ C.text_color .~~ txtCol
+                             , C.text_font .~~ C.Font_Custom "Sarabun"
+                             , C.text_weight .~~ C.Bold
+                             , C.text_size .|~ [C.XS, C.XS, C.LG]  -- text-xs on mobile, text-lg on md+
+                             ]
+    classCfg = primaryClass bgCol bgStates ringCol <&> C.classhUnsafe [C.py .~~ height, C.px .~~ width]
     name = T.filter (\c -> isAlphaNum c || isSpace c ) buttonText
 
 
 primaryButton :: DomBuilder t m => Text -> m (Event t ())
 primaryButton = primaryButton'
-  (C.only (C.noTransition (C.solidColor (C.hex "00B9DA"))))
-  (C.only (C.color C.White))
+  (C.only (C.noTransition (C.solidColor (C.Cyan C.C500))))
+  [("hover", C.solidColor (C.Cyan C.C600) `C.withTransition` C.Duration_200)
+  ,("active", C.solidColor (C.Cyan C.C400) `C.withTransition` C.Duration_100)]
+  (C.color C.White)
+  (C.color (C.Cyan C.C500))
 
-primaryButton' :: DomBuilder t m => C.WhenTW (C.WithTransition C.GradientColor) -> C.WhenTW C.ColorWithOpacity -> Text -> m (Event t ())
-primaryButton' bgCol _ buttonText = do
-  (e, _) <- elAttr' "button" ("class" =: classCfg <> "name" =: name) $ text buttonText
+primaryButton'
+  :: DomBuilder t m
+  => C.WhenTW (C.WithTransition C.GradientColor)  -- ^ Background color
+  -> [(C.TWCondition, C.WithTransition C.GradientColor)]  -- ^ Background hover/active states
+  -> C.ColorWithOpacity  -- ^ Text color
+  -> C.ColorWithOpacity  -- ^ Ring color
+  -> Text -> m (Event t ())
+primaryButton' bgCol bgStates txtCol ringCol buttonText = do
+  (e, _) <- elAttr' "button" ("class" =: classCfg <> "name" =: name) $
+    C.textS textCfg buttonText
   pure $ domEvent Click e
   where
-    classCfg = primaryClass bgCol <&> C.classhUnsafe [C.py .~~ C.TWSize 4, C.px .~~ C.TWSize 8]
+    textCfg = C.classhUnsafe [ C.text_color .~~ txtCol
+                             , C.text_font .~~ C.Font_Custom "Sarabun"
+                             , C.text_weight .~~ C.Bold
+                             , C.text_size .|~ [C.XS, C.XS, C.LG]  -- text-xs on mobile, text-lg on md+
+                             ]
+    classCfg = primaryClass bgCol bgStates ringCol <&> C.classhUnsafe [C.py .~~ C.TWSize 4, C.px .~~ C.TWSize 8]
     name = T.filter (\c -> isAlphaNum c || isSpace c ) buttonText
 
-primaryClass :: C.WhenTW (C.WithTransition C.GradientColor) -> Text
-primaryClass bgCol = C.classhUnsafe [ C.bgColor .~ bgCol
-                                    , C.br .~~ C.R_Xl
-                                    , C.shadow .~^ [("def", C.noTransition C.Shadow_Md)
-                                                    , ("hover", C.Shadow_Md `C.withTransition` C.Duration_300)
-                                                    ]
-                                    , C.border . C.outline .~ [("focus", C.Outline_None)]
-                                    , C.border . C.ring . C.ringWidth .~ [("focus", C.noTransition C.Ring_4)]
-                                    , C.border . C.ring . C.ringOpacity .~~ 50
-                                    , C.custom .~ "font-[Sarabun] font-bold text-white text-body text-center \
-                                                    \ ring-primary \
-                                                    \ hover:bg-primary-rich active:bg-primary-desaturated \
-                                                    \ transform hover:scale-105 active:scale-95 \
-                                                    \ whitespace-nowrap inline-block \
-                                                    \ min-[0px]:text-xs md:text-lg"
-                                    ]
+primaryClass
+  :: C.WhenTW (C.WithTransition C.GradientColor)  -- ^ Background color
+  -> [(C.TWCondition, C.WithTransition C.GradientColor)]  -- ^ Background hover/active states
+  -> C.ColorWithOpacity  -- ^ Ring color
+  -> Text
+primaryClass bgCol bgStates ringCol = C.classhUnsafe
+  [ C.bgColor .~ bgCol
+  , C.bgColor .~^ bgStates
+  , C.br .~~ C.R_Xl
+  , C.shadow .~^ [("def", C.noTransition C.Shadow_Md)
+                  , ("hover", C.Shadow_Md `C.withTransition` C.Duration_300)
+                  ]
+  , C.border . C.outline .~ [("focus", C.Outline_None)]
+  , C.border . C.ring . C.ringWidth .~ [("focus", C.noTransition C.Ring_4)]
+  , C.border . C.ring . C.ringColor .~~ ringCol
+  , C.border . C.ring . C.ringOpacity .~~ 50
+  , C.transform . C.scale .~^ [("hover", C.Scale_105 `C.withTransition` C.Duration_200)
+                              ,("active", C.Scale_95 `C.withTransition` C.Duration_100)]
+  , C.custom .~ "text-center whitespace-nowrap inline-block"
+  ]
 
 example :: Template t m => m (Event t ())
 example = buttonToggleBody "" True $ \case

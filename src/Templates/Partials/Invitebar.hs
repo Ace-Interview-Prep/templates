@@ -25,8 +25,8 @@ invitebar :: (PostBuild t m, DomBuilder t m, MonadHold t m, MonadFix m) => Text 
 invitebar = invitebar'
   (only (noTransition (solidColor White)))
   (only (noTransition (solidColor Transparent)))
-  (only (noTransition (color (hex "E11D48"))))
-  (only (color (hex "E11D48")))
+  (only (noTransition (color (Rose C600))))
+  (only (color (Rose C600)))
 
 -- | Parameterized version with custom colors
 invitebar'

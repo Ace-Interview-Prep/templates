@@ -2,6 +2,8 @@
 
 module Templates.Partials.Modal where
 
+import Classh as C
+import Classh.Reflex as C
 import Templates.Partials.Image
 import Templates.Types
 import Reflex.Dom.Core
@@ -18,16 +20,55 @@ modal :: ( DomBuilder t m
   -> Event t ()
   -> m a
   -> m (Event t a)
-modal xButtonImgSrc open modalDom = mdo
-  let styleBase = "position:fixed;z-index:20;padding-top:100px;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgb(0,0,0);background-color:rgba(0,0,0,0.4);"
-      hideModal = ("style" =: ("display:none;" <> styleBase))
-      showModal = ("style" =: ("display:block;" <> styleBase))
+modal = modal'
+  (C.solidColorOpacity C.Black 40)  -- overlay background
+  (C.solidColor (C.Slate C.C900))   -- content background (dark navy)
+  (C.color C.Black)                 -- border color
+  (C.color C.White)                 -- text color
+  (C.color (C.Rose C.C500))         -- close button color
+
+modal'
+  :: ( DomBuilder t m
+     , MonadFix m
+     , MonadHold t m
+     , PostBuild t m
+     )
+  => C.GradientColor    -- ^ Overlay background color (with opacity)
+  -> C.GradientColor    -- ^ Content background color
+  -> C.ColorWithOpacity -- ^ Border color
+  -> C.ColorWithOpacity -- ^ Text color
+  -> C.ColorWithOpacity -- ^ Close button icon color
+  -> ImgSrc
+  -> Event t ()
+  -> m a
+  -> m (Event t a)
+modal' overlayBg contentBg borderCol txtCol closeBtnCol xButtonImgSrc open modalDom = mdo
+  -- Overlay positioning must remain as inline style (no Classh for position:fixed, z-index, etc.)
+  let styleBase = "position:fixed;z-index:20;padding-top:100px;left:0;top:0;width:100%;height:100%;overflow:auto;"
+      hideModal = ("style" =: ("display:none;" <> styleBase) <> "class" =: overlayClass)
+      showModal = ("style" =: ("display:block;" <> styleBase) <> "class" =: overlayClass)
   modalAttrs <- holdDyn hideModal $ mergeWith const [showModal <$ open, hideModal <$ close]
   close <- elDynAttr "div" modalAttrs $ do
-    elAttr "div" ("style" =: "background-color:#00004D;margin:auto;padding:20px;width:80%;color:white;"
-                  <> "class" =: "border-double rounded-md border-8 border-black text-base") $ do
-      e <- fmap fst $ elClass' "span" "pl-5 ml-5 pb-4 text-rose-500 grid justify-items-end" $ do
+    elAttr "div" ("style" =: "margin:auto;width:80%;" <> "class" =: contentClass) $ do
+      e <- fmap fst $ elClass' "span" closeSpanClass $ do
         imgAttr xButtonImgSrc ("height" =: "30px" <> "width" =: "30px")
       x' <- modalDom
       pure $ x' <$ (domEvent Click e)
   pure close
+  where
+    overlayClass = C.classhUnsafe [ C.bgColor .~~ overlayBg ]
+    contentClass = C.classhUnsafe
+      [ C.bgColor .~~ contentBg
+      , C.p .~~ C.TWSize 5  -- padding:20px ≈ p-5
+      , C.border . C.bStyle .~~ C.BDouble
+      , C.br .~~ C.R_Md
+      , C.bw .~~ C.B8
+      , C.bc .~~ borderCol
+      , C.custom .~ "text-base"  -- text-base for font sizing
+      ] <> " " <> C.classhUnsafe [ C.text_color .~~ txtCol ]
+    closeSpanClass = C.classhUnsafe
+      [ C.pl .~~ C.TWSize 5
+      , C.ml .~~ C.TWSize 5
+      , C.pb .~~ C.TWSize 4
+      , C.custom .~ "grid justify-items-end"
+      ] <> " " <> C.classhUnsafe [ C.text_color .~~ closeBtnCol ]
