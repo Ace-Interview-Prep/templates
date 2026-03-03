@@ -13,6 +13,14 @@ import Control.Monad.Fix
 import Control.Monad
 import Reflex.Dom.Core
 
+-- | Initial state for collapsible containers
+data CollapsibleState = Open | Closed
+  deriving (Eq, Show)
+
+isOpen :: CollapsibleState -> Bool
+isOpen Open = True
+isOpen Closed = False
+
 screenContainer :: (DomBuilder t m) => m a -> m a
 screenContainer = elClass "div" $(classh' [w .~~ TWSize_Screen, h .~~ TWSize_Screen, custom .~ "flex flex-col overflow-hidden"])
 
@@ -84,21 +92,22 @@ collapsibleContainer txtCol label body = do
 -- clicking on its header.
 collapsibleContainerWithImage
   :: (MonadFix m, DomBuilder t m, PostBuild t m, MonadHold t m)
-  => Text
+  => CollapsibleState  -- ^ Initial state
+  -> Text
   -> Text
   -> m a
   -> m a
-collapsibleContainerWithImage imgSrc label body = do
+collapsibleContainerWithImage initialState imgSrc label body = do
   let
     bodyClasses :: Bool -> Text
     bodyClasses shown = bool "hidden" mempty shown
 
-  toggled <- toggleButtonWithImage imgSrc label
+  toggled <- toggleButtonWithImage initialState imgSrc label
   elDynClass "div" (bodyClasses <$> toggled) body
 
 
-toggleButtonWithImage :: (MonadFix m, DomBuilder t m, PostBuild t m, MonadHold t m) => Text -> Text -> m (Dynamic t Bool)
-toggleButtonWithImage imgSrc label = do
+toggleButtonWithImage :: (MonadFix m, DomBuilder t m, PostBuild t m, MonadHold t m) => CollapsibleState -> Text -> Text -> m (Dynamic t Bool)
+toggleButtonWithImage initialState imgSrc label = do
   let
     classes :: Bool -> Text
     classes shown = classhUnsafe $
@@ -121,7 +130,7 @@ toggleButtonWithImage imgSrc label = do
         dynText "expand_less"
 
     let toggleEv = domEvent Click labelEl
-    toggled <- holdUniqDyn =<< toggle True toggleEv
+    toggled <- holdUniqDyn =<< toggle (isOpen initialState) toggleEv
 
   pure toggled
 
