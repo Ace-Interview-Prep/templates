@@ -16,28 +16,30 @@ commonClassesText = $(classh' [text_size .|~ [XL2, XL4], custom .~ "font-label" 
 
 messageInput'
   :: Template t m
-  => Event t (Map AttributeName Text)
+  => T.Text
+  -> Event t (Map AttributeName Text)
   -> Event t ()
   -> m (InputEl t m)
-messageInput' newAttributes clearEvent = inputElement $ def
-  & initialAttributes .~ messageInputAttrs
+messageInput' textClass newAttributes clearEvent = inputElement $ def
+  & initialAttributes .~ messageInputAttrs textClass
   & inputElementConfig_setValue .~ ("" <$ clearEvent)
   & (inputElementConfig_elementConfig . elementConfig_modifyAttributes) .~ ((fmap.fmap) Just newAttributes)
 
 messageInput
   :: Template t m
-  => Event t (Map AttributeName Text)
+  => T.Text
+  -> Event t (Map AttributeName Text)
   -> Event t ()
   -> m (TextAreaElement EventResult (DomBuilderSpace m) t)
-messageInput newAttributes clearEvent = textAreaElement $ def
-  & initialAttributes .~ messageInputAttrs
+messageInput textClass newAttributes clearEvent = textAreaElement $ def
+  & initialAttributes .~ messageInputAttrs textClass
   & textAreaElementConfig_setValue .~ ("" <$ clearEvent)
   & (textAreaElementConfig_elementConfig . elementConfig_modifyAttributes) .~ ((fmap.fmap) Just newAttributes)
 
 
-messageInputAttrs ::  Map.Map AttributeName T.Text
-messageInputAttrs =
-  "class" =: $(classh' [w .~~ TWSize_Full, p .~~ TWSize 4, custom .~ "text-2xl"] )
+messageInputAttrs :: T.Text -> Map.Map AttributeName T.Text
+messageInputAttrs textClass =
+  "class" =: ($(classh' [w .~~ TWSize_Full, p .~~ TWSize 4]) <> " " <> textClass)
   <> "placeholder" =: "Type your message"
   <> "type" =: "text"
   <> "rows" =: "2"
