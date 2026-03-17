@@ -39,7 +39,7 @@ messageInput textClass newAttributes clearEvent = textAreaElement $ def
 
 messageInputAttrs :: T.Text -> Map.Map AttributeName T.Text
 messageInputAttrs textClass =
-  "class" =: ($(classh' [w .~~ TWSize_Full, p .~~ TWSize 4]) <> " " <> textClass)
+  "class" =: ($(classh' [custom .~ "focus:outline-none", bgColor .~~ solidColor (hex "2D2644"), br .~~ R_Lg, w .~~ TWSize_Full, p .~~ TWSize 4]) <> " " <> textClass)
   <> "placeholder" =: "Type your message"
   <> "type" =: "text"
   <> "rows" =: "2"
