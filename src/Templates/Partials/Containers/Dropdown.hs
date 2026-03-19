@@ -45,7 +45,7 @@ dropdown'' bgCol borderCol options cfg' = mdo
                             , bc .~ borderCol
                             , br .~~ R_Lg
                             , border . outline .~ [("focus", Outline_None)]
-                            , mb .~~ TWSize 5
+                            , mb .~~ twSize' 5
                             , bgColor .~ bgCol
                             , custom .~ "font-[Sarabun] text-lg"
                             ]
@@ -100,7 +100,7 @@ dropdownWithDefault' bgCol borderCol options start cfg' = mdo
                             , bc .~ borderCol
                             , br .~~ R_Lg
                             , border . outline .~ [("focus", Outline_None)]
-                            , mb .~~ TWSize 5
+                            , mb .~~ twSize' 5
                             , bgColor .~ bgCol
                             ]
   let safeInitial = start

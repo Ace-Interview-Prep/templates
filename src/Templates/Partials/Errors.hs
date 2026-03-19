@@ -40,5 +40,5 @@ displayOn template ev = maybeDisplay template =<< holdDyn Nothing (Just <$> ev)
 -- | Render an error message with custom text color.
 errorMessage' :: Template t m => ColorWithOpacity -> Text -> m ()
 errorMessage' txtCol t =
-  elClass "div" $(classh' [mt .~~ TWSize 1, h .~~ twSize' 4]) $
+  elClass "div" $(classh' [mt .~~ twSize' 1, h .~~ twSize' 4]) $
     textS (classhUnsafe [text_color .~~ txtCol]) t
