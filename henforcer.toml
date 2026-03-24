@@ -1,0 +1,8 @@
+[forAnyModule]
+moduleHeaderDescriptionMustExistNonEmpty = true
+moduleHeaderCopyrightMustExistNonEmpty = true
+moduleHeaderLicenseMustExistNonEmpty = true
+moduleHeaderMaintainerMustExistNonEmpty = true
+maximumExportsPlusHeaderUndocumented = 0
+allowedOpenUnaliasedImports = 2
+allowedAliasUniqueness = { allAliasesUniqueExcept = [], note = "All import aliases must be unique" }

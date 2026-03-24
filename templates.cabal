@@ -1,12 +1,23 @@
 name: templates
 version: 0.1.0.0
-cabal-version: >= 1.8
+cabal-version: >= 1.10
 build-type: Simple
+maintainer: galen.sprout@gmail.com
+category: Web
+license-file: LICENSE
+license: MIT
+synopsis: Out of the box reflex-dom elements
+description:
+    Out of the box reflex-dom elements built with ClasshSS and reflex-classhss
+extra-doc-files: doc/*.svg
 
+source-repository head
+  type:                git
+  location:            https://github.com/Ace-Interview-Prep/templates
 
 library
-    hs-source-dirs:   src
-    exposed-modules: Templates.Partials.Buttons
+  hs-source-dirs:   src
+  exposed-modules: Templates.Partials.Buttons
                      Templates.Partials.Checkbox
                      Templates.Partials.Image
                      Templates.Partials.Containers
@@ -20,8 +31,7 @@ library
                      Templates.Partials.Invitebar
                      Templates.Types
                      Templates.DomExtras
-
-
+  default-language: Haskell2010
   default-extensions:
     ConstraintKinds
     FlexibleContexts
@@ -30,18 +40,34 @@ library
     GADTs
     LambdaCase
     MultiParamTypeClasses
-    -- OverloadedStrings
     RankNTypes
     RecursiveDo
     ScopedTypeVariables
     TemplateHaskell
 
-  build-depends: base
-               , ClasshSS
-               , containers
-               , data-default
-               , filepath
-               , lens
-               , reflex-classhss
-               , reflex-dom
-               , text
+  ghc-options: -Wall -fplugin Henforcer "-fplugin-opt=Henforcer:-chenforcer.toml"
+
+  build-depends: ClasshSS >= 0.2.0 && < 0.3
+               , base >= 4.19.0 && < 4.21
+               , containers >= 0.7 && < 0.8
+               , data-default >= 0.8.0 && < 0.9
+               , filepath >= 1.5.4 && < 1.6
+               , henforcer
+               , lens >= 5.3.6 && < 5.4
+               , reflex-classhss >= 0.1.0 && < 0.2
+               , reflex-dom >= 0.6.3 && < 0.7
+               , text >= 2.1.3 && < 2.2
+
+test-suite tests
+  type:               exitcode-stdio-1.0
+  main-is:            Main.hs
+  hs-source-dirs:     test
+  default-language:   Haskell2010
+  default-extensions: OverloadedStrings
+  build-depends:      base >= 4.19.0 && < 4.21
+                    , filepath >= 1.5.4 && < 1.6
+                    , hedgehog
+                    , tasty
+                    , tasty-hedgehog
+                    , tasty-hunit
+                    , text >= 2.1.3 && < 2.2
