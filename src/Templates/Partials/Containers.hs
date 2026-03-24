@@ -49,6 +49,7 @@ module Templates.Partials.Containers (
 import Classh as C
 import Classh.Reflex as CR
 import Control.Monad (void)
+import Control.Monad.Fix (MonadFix)
 import Data.Bool (bool)
 import qualified Data.Text as T
 import Reflex.Dom.Core
@@ -148,9 +149,9 @@ openCloseButton imgSrc tColor name = do
     buttonToggleBody (constDyn "pl-10") True $ \case
         True -> do
             CR.col [6] $ imgClass imgSrc $(classh' [custom .~ "rotate-180 inline-block", position .~~ centered])
-            CR.divClass $(classh' [colSpan .|~ [6], position .~~ centered, custom .~ "inline-block"]) $ do
+            elClass "div" $(classh' [colSpan .|~ [6], position .~~ centered, custom .~ "inline-block"]) $ do
                 CR.textS (classhUnsafe [text_color .~~ tColor]) $ "close" <&> name
         False -> do
             CR.col [6] $ imgClass imgSrc $(classh' [custom .~ "rotate-180 inline-block", position .~~ centered])
-            CR.divClass $(classh' [colSpan .|~ [6], position .~~ centered, custom .~ "inline-block"]) $ do
+            elClass "div" $(classh' [colSpan .|~ [6], position .~~ centered, custom .~ "inline-block"]) $ do
                 CR.textS (classhUnsafe [text_color .~~ tColor]) $ "open" <&> name

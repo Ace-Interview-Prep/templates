@@ -30,7 +30,7 @@ module Templates.Partials.Lists (
     renderHighlight,
 ) where
 
-import Classh
+import Classh as C
 import Classh.Reflex (textS)
 import Data.Default (Default (def))
 import Data.List (intersperse)

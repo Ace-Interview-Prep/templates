@@ -34,7 +34,7 @@ module Templates.Partials.Invitebar (
     invitebar,
 ) where
 
-import Classh
+import Classh as C
 import Classh.Reflex (textS)
 import Control.Monad.Fix (MonadFix)
 import Data.Text (Text)

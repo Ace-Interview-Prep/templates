@@ -23,7 +23,7 @@ module Templates.Partials.Searchbar (
     searchbar,
 ) where
 
-import Classh
+import Classh as C
 import Data.Default (Default (def))
 import Data.Text (Text)
 import Reflex.Dom.Core

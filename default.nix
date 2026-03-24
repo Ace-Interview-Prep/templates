@@ -1,5 +1,5 @@
 { mkDerivation, base, ClasshSS, containers, data-default, filepath
-, henforcer, lens, lib, reflex-classhss, reflex-dom, text
+, henforcer, lens, lib, reflex-classhss, reflex-dom-core, text
 , hedgehog, tasty, tasty-hedgehog, tasty-hunit
 }:
 mkDerivation {
@@ -8,7 +8,7 @@ mkDerivation {
   src = ./.;
   libraryHaskellDepends = [
     base ClasshSS containers data-default filepath henforcer lens
-    reflex-classhss reflex-dom text
+    reflex-classhss reflex-dom-core text
   ];
   testHaskellDepends = [
     base hedgehog tasty tasty-hedgehog tasty-hunit text filepath

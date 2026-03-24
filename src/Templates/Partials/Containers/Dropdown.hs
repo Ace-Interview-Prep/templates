@@ -26,7 +26,7 @@ module Templates.Partials.Containers.Dropdown (
     dropdownWithDefault,
 ) where
 
-import Classh
+import Classh as C
 import Classh.Reflex (textS)
 import Control.Monad.Fix (MonadFix)
 import qualified Data.Map as Map
@@ -77,7 +77,7 @@ dropdownWithDefault options start cfg' = mdo
                 , px .~~ TWSize 4
                 , py .~~ TWSize 3
                 , bw .~~ B1
-                , bc .~^ [("def", noTransition (Gray C300)), ("focus", noTransition (hex "00B9DA"))]
+                , bc .~ [("def", Gray C300), ("focus", hex "00B9DA")]
                 , br .~~ R_Lg
                 , border . bStyle .~ [("focus", BNone)]
                 , custom .~ "focus:outline-none focus:border-"

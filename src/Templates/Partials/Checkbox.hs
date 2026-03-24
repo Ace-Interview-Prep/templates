@@ -37,7 +37,7 @@ module Templates.Partials.Checkbox (
 import Data.Default (Default (def))
 import qualified Data.Map as Map
 import qualified Data.Text as T
-import Reflex.Dom.Core
+import Reflex.Dom.Core hiding (Checkbox, CheckboxConfig, checkbox, _checkboxConfig_attributes, _checkboxConfig_setValue, _checkbox_change, _checkbox_value)
 
 -- | Configuration for a checkbox element.
 data CheckboxConfig t = CheckboxConfig

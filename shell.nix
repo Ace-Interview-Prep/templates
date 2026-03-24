@@ -27,9 +27,14 @@ let
           license = lib.licenses.mit;
         }) {}));
       ClasshSS = haskellLib.dontCheck (haskellLib.doJailbreak
-        (haskellLib.addBuildDepend
+        (haskellLib.overrideCabal
           (self.callPackage ../ClasshSS/ClasshSS/default.nix {})
-          self.henforcer));
+          (old: {
+            postPatch = (old.postPatch or "") + ''
+              sed -i '/henforcer/d' ClasshSS.cabal
+              sed -i '/-fplugin Henforcer/d' ClasshSS.cabal
+            '';
+          })));
       reflex-classhss = haskellLib.dontCheck (haskellLib.doJailbreak
         (self.callPackage ../reflex-classh/default.nix {}));
     };
