@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 140" font-family="sans-serif">
+  <text x="250" y="20" text-anchor="middle" font-size="14" fill="#666">Templates.Partials.Image</text>
+
+  <!-- Image element mockup -->
+  <rect x="30" y="35" width="120" height="80" rx="4" fill="#F0F4F8" stroke="#D0D5DD" stroke-width="1"/>
+  <text x="90" y="70" text-anchor="middle" font-size="24" fill="#AAA">&#128247;</text>
+  <text x="90" y="90" text-anchor="middle" font-size="9" fill="#888">profile-photo.png</text>
+
+  <!-- Arrow showing mkBasicName -->
+  <line x1="165" y1="75" x2="230" y2="75" stroke="#AAA" stroke-width="1" marker-end="url(#arrowhead)"/>
+  <defs><marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+    <polygon points="0 0, 8 3, 0 6" fill="#AAA"/>
+  </marker></defs>
+  <text x="197" y="68" text-anchor="middle" font-size="9" fill="#00B9DA">mkBasicName</text>
+
+  <!-- Generated alt text -->
+  <rect x="240" y="55" width="130" height="30" rx="4" fill="#E8F7FA" stroke="#00B9DA" stroke-width="1"/>
+  <text x="305" y="75" text-anchor="middle" font-size="12" fill="#2E3A59">alt="profile photo"</text>
+
+  <!-- Variants -->
+  <text x="410" y="50" font-size="10" fill="#555">img src</text>
+  <text x="410" y="65" font-size="10" fill="#555">imgAttr src attrs</text>
+  <text x="410" y="80" font-size="10" fill="#555">imgClass src class</text>
+  <text x="410" y="100" font-size="9" fill="#888">All auto-generate alt from</text>
+  <text x="410" y="112" font-size="9" fill="#888">filename via mkBasicName</text>
+</svg>

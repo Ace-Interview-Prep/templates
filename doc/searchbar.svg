@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 100" font-family="sans-serif">
+  <text x="225" y="20" text-anchor="middle" font-size="14" fill="#666">Templates.Partials.Searchbar</text>
+
+  <!-- Searchbar -->
+  <rect x="50" y="35" width="350" height="42" rx="6" fill="white" stroke="#E0E0E0" stroke-width="1"/>
+  <!-- Search icon button -->
+  <rect x="52" y="37" width="42" height="38" rx="6" fill="#F8F8F8"/>
+  <text x="73" y="62" text-anchor="middle" font-size="18" fill="#888">&#128269;</text>
+  <!-- Input area -->
+  <text x="110" y="61" font-size="13" fill="#AAA" font-weight="300">Search conversations...</text>
+
+  <!-- API note -->
+  <text x="225" y="93" text-anchor="middle" font-size="10" fill="#888">searchbar :: Text -> Event t a -> m (InputEl t m)</text>
+</svg>

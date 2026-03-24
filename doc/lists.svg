@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 250" font-family="sans-serif">
+  <text x="250" y="20" text-anchor="middle" font-size="14" fill="#666">Templates.Partials.Lists</text>
+
+  <!-- List container -->
+  <g transform="translate(30, 35)">
+    <!-- Item 1: with icon + highlight -->
+    <rect width="220" height="55" fill="#1A1A2E"/>
+    <text x="15" y="22" font-size="14" fill="white">&#9733;</text>
+    <text x="35" y="22" font-size="13" fill="white">Meeting with </text>
+    <text x="138" y="22" font-size="13" fill="white" font-weight="bold">John</text>
+    <text x="35" y="40" font-size="10" fill="#AAA">Tomorrow at 3pm</text>
+    <line x1="0" y1="55" x2="220" y2="55" stroke="#333" stroke-width="1"/>
+
+    <!-- Item 2: clickable + unread -->
+    <rect y="56" width="220" height="55" fill="#FF6D31"/>
+    <text x="15" y="78" font-size="14" fill="white">&#9993;</text>
+    <text x="35" y="78" font-size="13" fill="white">New messages</text>
+    <rect x="180" y="66" width="28" height="20" rx="10" fill="rgba(255,255,255,0.3)"/>
+    <text x="194" y="81" text-anchor="middle" font-size="10" fill="white" font-weight="bold">3</text>
+    <text x="35" y="96" font-size="10" fill="rgba(255,255,255,0.7)">Click to view</text>
+    <line x1="0" y1="111" x2="220" y2="111" stroke="#333" stroke-width="1"/>
+
+    <!-- Item 3: plain -->
+    <rect y="112" width="220" height="40" fill="#1A1A2E"/>
+    <text x="15" y="137" font-size="13" fill="white">Simple item</text>
+  </g>
+
+  <!-- renderHighlight explanation -->
+  <g transform="translate(280, 40)">
+    <text x="0" y="0" font-size="11" fill="#555" font-weight="bold">renderHighlight</text>
+    <text x="0" y="20" font-size="10" fill="#888">Input: "Meeting with John"</text>
+    <text x="0" y="35" font-size="10" fill="#888">Token: "John"</text>
+
+    <text x="0" y="58" font-size="10" fill="#555">T.splitOn "John" text =</text>
+    <text x="0" y="73" font-size="10" fill="#555">["Meeting with ", ""]</text>
+
+    <text x="0" y="96" font-size="10" fill="#555">Result:</text>
+    <text x="0" y="114" font-size="12" fill="#333">Meeting with </text>
+    <text x="96" y="114" font-size="12" fill="#333" font-weight="bold">John</text>
+  </g>
+
+  <!-- Config legend -->
+  <g transform="translate(280, 165)">
+    <text x="0" y="0" font-size="11" fill="#555" font-weight="bold">ListItemConfig</text>
+    <text x="0" y="18" font-size="10" fill="#888">clickable: cursor-pointer + hover</text>
+    <text x="0" y="33" font-size="10" fill="#888">subtext: secondary text below label</text>
+    <text x="0" y="48" font-size="10" fill="#888">icon: material icon left of label</text>
+    <text x="0" y="63" font-size="10" fill="#888">highlight: bold matching token</text>
+    <text x="0" y="78" font-size="10" fill="#888">unread: orange bg + badge count</text>
+  </g>
+</svg>

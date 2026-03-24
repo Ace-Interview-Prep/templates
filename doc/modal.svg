@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 250" font-family="sans-serif">
+  <text x="225" y="20" text-anchor="middle" font-size="14" fill="#666">Templates.Partials.Modal</text>
+
+  <!-- Page background -->
+  <g transform="translate(30, 35)">
+    <rect width="390" height="190" rx="4" fill="#F0F0F0" stroke="#DDD" stroke-width="1"/>
+    <text x="195" y="20" text-anchor="middle" font-size="11" fill="#AAA">page content</text>
+
+    <!-- Overlay -->
+    <rect width="390" height="190" rx="4" fill="rgba(0,0,0,0.4)"/>
+
+    <!-- Modal card -->
+    <rect x="55" y="30" width="280" height="130" rx="6" fill="#00004D" stroke="black" stroke-width="3" stroke-dasharray="none"/>
+
+    <!-- Close button -->
+    <rect x="300" y="38" width="25" height="25" rx="3" fill="none"/>
+    <text x="312" y="56" text-anchor="middle" font-size="16" fill="#F43F5E">&#10005;</text>
+
+    <!-- Modal content -->
+    <text x="195" y="80" text-anchor="middle" font-size="13" fill="white">Modal Content</text>
+    <rect x="120" y="95" width="150" height="30" rx="4" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+    <text x="195" y="115" text-anchor="middle" font-size="11" fill="#AAA">[ user-provided widget ]</text>
+
+    <!-- Z-index labels -->
+    <text x="350" y="185" font-size="9" fill="white">z-index: 20</text>
+  </g>
+
+  <!-- API note -->
+  <text x="225" y="242" text-anchor="middle" font-size="10" fill="#888">modal :: ImgSrc -> Event t () -> m a -> m (Event t a)</text>
+</svg>

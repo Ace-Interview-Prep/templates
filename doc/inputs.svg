@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 200" font-family="sans-serif">
+  <text x="250" y="20" text-anchor="middle" font-size="14" fill="#666">Templates.Partials.Inputs</text>
+
+  <!-- messageInput' (single line) -->
+  <g transform="translate(30, 40)">
+    <rect width="200" height="40" rx="4" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+    <text x="15" y="26" font-size="12" fill="#AAA">Type your message</text>
+    <text x="100" y="60" text-anchor="middle" font-size="10" fill="#888">messageInput' (single line)</text>
+  </g>
+
+  <!-- messageInput (textarea) -->
+  <g transform="translate(260, 40)">
+    <rect width="200" height="65" rx="4" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+    <text x="15" y="22" font-size="12" fill="#AAA">Type your message</text>
+    <line x1="10" y1="35" x2="190" y2="35" stroke="#E8E8E8" stroke-width="0.5"/>
+    <text x="100" y="85" text-anchor="middle" font-size="10" fill="#888">messageInput (textarea, rows=2)</text>
+  </g>
+
+  <!-- attachmentInput -->
+  <g transform="translate(30, 130)">
+    <rect width="200" height="35" rx="4" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="1"/>
+    <text x="15" y="23" font-size="12" fill="#555">Choose file...</text>
+    <text x="100" y="55" text-anchor="middle" font-size="10" fill="#888">attachmentInput (type=file)</text>
+  </g>
+
+  <!-- Common styling note -->
+  <text x="350" y="148" font-size="10" fill="#555">Common box: mx-1, bg-inset</text>
+  <text x="350" y="163" font-size="10" fill="#555">Common text: text-2xl/4xl responsive</text>
+  <text x="350" y="178" font-size="10" fill="#AAA">All support clearEvent and newAttributes</text>
+</svg>

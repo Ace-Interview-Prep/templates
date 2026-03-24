@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 170" font-family="sans-serif">
+  <text x="225" y="20" text-anchor="middle" font-size="14" fill="#666">Templates.Partials.Containers.Dropdown</text>
+
+  <!-- Closed dropdown -->
+  <g transform="translate(30, 35)">
+    <rect width="170" height="40" rx="8" fill="white" stroke="#D1D5DB" stroke-width="1"/>
+    <text x="15" y="26" font-size="13" fill="#333">Select option</text>
+    <text x="150" y="26" font-size="14" fill="#888">&#9662;</text>
+    <text x="85" y="60" text-anchor="middle" font-size="10" fill="#888">closed</text>
+  </g>
+
+  <!-- Open dropdown -->
+  <g transform="translate(240, 35)">
+    <rect width="170" height="40" rx="8" fill="white" stroke="#00B9DA" stroke-width="2"/>
+    <text x="15" y="26" font-size="13" fill="#333">Option A</text>
+    <text x="150" y="26" font-size="14" fill="#888">&#9652;</text>
+    <!-- Options list -->
+    <rect x="0" y="42" width="170" height="90" rx="4" fill="white" stroke="#D1D5DB" stroke-width="1"/>
+    <rect x="2" y="44" width="166" height="28" fill="#EEF4FF"/>
+    <text x="15" y="63" font-size="12" fill="#2E3A59">Option A</text>
+    <text x="15" y="91" font-size="12" fill="#333">Option B</text>
+    <text x="15" y="119" font-size="12" fill="#333">Option C</text>
+    <text x="85" y="150" text-anchor="middle" font-size="10" fill="#888">open (focus:border-[#00B9DA])</text>
+  </g>
+</svg>

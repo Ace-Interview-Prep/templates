@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 200" font-family="sans-serif">
+  <text x="250" y="20" text-anchor="middle" font-size="14" fill="#666">Templates.Partials.Invitebar</text>
+
+  <!-- Empty state -->
+  <g transform="translate(30, 35)">
+    <rect width="200" height="38" rx="6" fill="white" stroke="#E0E0E0" stroke-width="1">
+    </rect>
+    <!-- Email icon -->
+    <text x="15" y="25" font-size="14" fill="#888">&#9993;</text>
+    <!-- Placeholder -->
+    <text x="35" y="25" font-size="11" fill="#AAA">Enter email address</text>
+    <!-- Send button (disabled) -->
+    <rect x="165" y="5" width="30" height="28" rx="4" fill="#E0E0E0"/>
+    <text x="180" y="24" text-anchor="middle" font-size="12" fill="#AAA">&#9654;</text>
+    <text x="100" y="55" text-anchor="middle" font-size="10" fill="#888">empty (send disabled)</text>
+  </g>
+
+  <!-- Filled state -->
+  <g transform="translate(260, 35)">
+    <rect width="200" height="38" rx="6" fill="white" stroke="#E0E0E0" stroke-width="1"/>
+    <text x="15" y="25" font-size="14" fill="#888">&#9993;</text>
+    <text x="35" y="25" font-size="11" fill="#333">user@example.com</text>
+    <!-- Send button (enabled) -->
+    <rect x="165" y="5" width="30" height="28" rx="4" fill="#00B9DA"/>
+    <text x="180" y="24" text-anchor="middle" font-size="12" fill="white">&#9654;</text>
+    <text x="100" y="55" text-anchor="middle" font-size="10" fill="#888">filled (send enabled)</text>
+  </g>
+
+  <!-- Feedback state -->
+  <g transform="translate(30, 115)">
+    <rect width="200" height="38" rx="6" fill="white" stroke="#E0E0E0" stroke-width="1"/>
+    <text x="15" y="25" font-size="14" fill="#888">&#9993;</text>
+    <text x="35" y="25" font-size="11" fill="#333">user@example.com</text>
+    <rect x="165" y="5" width="30" height="28" rx="4" fill="#00B9DA"/>
+    <text x="180" y="24" text-anchor="middle" font-size="12" fill="white">&#9654;</text>
+    <!-- Feedback -->
+    <rect x="0" y="42" width="200" height="22" rx="3" fill="none"/>
+    <text x="100" y="57" text-anchor="middle" font-size="10" fill="#DC2626">Invitation sent to user@example.com</text>
+    <text x="100" y="80" text-anchor="middle" font-size="10" fill="#888">after send (feedback shown)</text>
+  </g>
+
+  <!-- Note -->
+  <text x="370" y="140" text-anchor="middle" font-size="9" fill="#AAA">emailParse is currently a stub</text>
+  <text x="370" y="155" text-anchor="middle" font-size="9" fill="#AAA">(always returns Right True)</text>
+</svg>
