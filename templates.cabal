@@ -13,7 +13,7 @@ extra-doc-files: doc/*.svg
 
 source-repository head
   type:                git
-  location:            https://github.com/Ace-Interview-Prep/templates
+  location:            https://github.com/TypifyDev/templates
 
 library
   hs-source-dirs:   src
