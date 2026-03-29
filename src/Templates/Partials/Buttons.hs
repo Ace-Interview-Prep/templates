@@ -105,7 +105,7 @@ primaryButtonDyn' bgCol bgStates txtCol shadowVal ringStates ringCol enabled but
       , C.bgColor .~^ bgStates
       , C.w .~~ C.TWSize_Full
       , C.p .~~ C.TWSize 4
-      , C.mt .~~ C.TWSize 12
+      , C.mt .~~ C.twSize' 12
       , C.shadow .~~ shadowVal
       , C.br .~~ C.R_Normal
       , C.border . C.outline .~ [("focus", C.Outline_None)]
@@ -242,7 +242,7 @@ primaryButtonImageDyn bgCol bgStates ringCol dynImageHref height width = do
     imgAttrs = (\src -> otherImgAttrs <> "src" =: src) <$> dynImageHref
     boxCfg = C.classhUnsafe [ C.w .~~ C.TWSize_Full
                             , C.p .~~ C.TWSize 4
-                            , C.mt .~~ C.TWSize 16
+                            , C.mt .~~ C.twSize' 16
                             , C.bgColor .~ bgCol
                             , C.bgColor .~^ bgStates
                             , C.br .~~ C.R_Xl
@@ -306,7 +306,7 @@ primaryButtonBoxCfg
 primaryButtonBoxCfg bgCol bgStates ringCol = C.classhUnsafe
   [ C.w .~~ C.TWSize_Full
   , C.p .~~ C.TWSize 4
-  , C.mt .~~ C.TWSize 16
+  , C.mt .~~ C.twSize' 16
   , C.bgColor .~ bgCol
   , C.bgColor .~^ bgStates
   , C.br .~~ C.R_Xl

@@ -46,7 +46,7 @@ toggleButton' txtCol label = do
   -- be animated; Having the "neutral" position be "no transform" means
   -- the icon won't do a twirl on page load.
   rec
-    (labelEl, _) <- elClass' "div" (classhUnsafe [ mt .~~ TWSize 8
+    (labelEl, _) <- elClass' "div" (classhUnsafe [ mt .~~ twSize' 8
                                                  , cursor .~~ CursorPointer
                                                  , custom .~ "flex flex-row justify-between"
                                                  ]) $ do

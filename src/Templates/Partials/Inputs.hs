@@ -9,7 +9,7 @@ import Data.Map as Map
 import Classh as C
 
 commonClassesBox :: T.Text
-commonClassesBox = $(classh' [mx .~~ TWSize 1, custom .~ "focus:outline-none bg-inset flex-grow" ]) 
+commonClassesBox = $(classh' [mx .~~ twSize' 1, custom .~ "focus:outline-none bg-inset flex-grow" ]) 
 
 commonClassesText :: T.Text
 commonClassesText = $(classh' [text_size .|~ [XL2, XL4], custom .~ "font-label" ])

@@ -46,7 +46,7 @@ invitebar' bgCol inputBgCol borderCol textCol btnBgCol btnIconCol placeholder = 
           -- TODO: remove
           Right False -> "Email must be @aceinterviewprep.io"
           Left _ -> "Invalid email format"
-    invbar@(invInput, invButton) <- elClass "div" (classhUnsafe [my .~~ TWSize 2
+    invbar@(invInput, invButton) <- elClass "div" (classhUnsafe [my .~~ twSize' 2
                                                             , w .~~ TWSize_Full
                                                             , custom .~ "shadow-button flex flex-row"
                                                             , bgColor .~ bgCol

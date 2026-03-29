@@ -44,9 +44,9 @@ modal'
   -> m (Event t a)
 modal' overlayBg contentBg borderCol txtCol closeBtnCol xButtonImgSrc open modalDom = mdo
   -- Overlay positioning must remain as inline style (no Classh for position:fixed, z-index, etc.)
-  let styleBase = "position:fixed;z-index:20;padding-top:100px;left:0;top:0;width:100%;height:100%;overflow:auto;"
-      hideModal = ("style" =: ("display:none;" <> styleBase) <> "class" =: overlayClass)
-      showModal = ("style" =: ("display:block;" <> styleBase) <> "class" =: overlayClass)
+  let styleBase = "position:fixed;z-index:9999;padding-top:100px;left:0;top:0;width:100%;height:100%;overflow:auto;"
+      hideModal = ("style" =: ("display:none;visibility:hidden;" <> styleBase) <> "class" =: overlayClass)
+      showModal = ("style" =: ("display:block;visibility:visible;" <> styleBase) <> "class" =: overlayClass)
   modalAttrs <- holdDyn hideModal $ mergeWith const [showModal <$ open, hideModal <$ close]
   close <- elDynAttr "div" modalAttrs $ do
     elAttr "div" ("style" =: "margin:auto;width:80%;" <> "class" =: contentClass) $ do
@@ -68,7 +68,7 @@ modal' overlayBg contentBg borderCol txtCol closeBtnCol xButtonImgSrc open modal
       ] <> " " <> C.classhUnsafe [ C.text_color .~~ txtCol ]
     closeSpanClass = C.classhUnsafe
       [ C.pl .~~ C.TWSize 5
-      , C.ml .~~ C.TWSize 5
+      , C.ml .~~ C.twSize' 5
       , C.pb .~~ C.TWSize 4
       , C.custom .~ "grid justify-items-end"
       ] <> " " <> C.classhUnsafe [ C.text_color .~~ closeBtnCol ]

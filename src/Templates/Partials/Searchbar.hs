@@ -31,7 +31,7 @@ searchbar'
   -> Event t a
   -> m (InputEl t m)
 searchbar' bgCol inputBgCol txtCol placeholder clearEvent = do
-  elClass "div" (classhUnsafe [mt .~~ TWSize 0, w .~~ TWSize_Full, bgColor .~ bgCol, br .~~ R_Normal, custom .~ "flex flex-row"]) $ do
+  elClass "div" (classhUnsafe [mt .~~ twSize' 0, w .~~ TWSize_Full, bgColor .~ bgCol, br .~~ R_Normal, custom .~ "flex flex-row"]) $ do
     elClass "button" (classhUnsafe [ px .~~ TWSize 3
                                    , br .~~ R_Normal
                                    , shadow .~~ Shadow_Md
